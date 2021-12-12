@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 void usage() {
-    printf("x6502: a simple 65C02/65C22 emulator\n");
+    printf("x6502: a simple 65C02/65C22 emulator\n");  
     printf("usage: x6502 [OPTION]... FILE\n");
     printf("options:\n");
     printf("  -b ADDR the base address at which code will be loaded (in hex, default 8000)\n");
