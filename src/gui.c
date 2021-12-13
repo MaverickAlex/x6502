@@ -74,55 +74,56 @@ WINDOW *wnd_trace_content = NULL;
 WINDOW *wnd_memory = NULL;
 WINDOW *wnd_memory_content = NULL;
 
-void init_gui() {
-    initscr();
-    cbreak();
-    noecho();
-    nodelay(stdscr, TRUE);
-    keypad(stdscr, TRUE);
-    curs_set(0);
+void init_gui() 
+{
+  initscr();
+  cbreak();
+  noecho();
+  nodelay(stdscr, TRUE);
+  keypad(stdscr, TRUE);
+  curs_set(0);
 
-    io_supports_paint = (has_colors() != FALSE);
-    if (io_supports_paint) {
-        start_color();
-        for (int i = 0; i < 8; i++) {
-            init_pair(i, i, COLOR_BLACK);
-            init_pair(i+8, i, COLOR_WHITE);
-        }
-    }
+  io_supports_paint = (has_colors() != FALSE);
+  if (io_supports_paint) {
+      start_color();
+      for (int i = 0; i < 8; i++) {
+          init_pair(i, i, COLOR_BLACK);
+          init_pair(i+8, i, COLOR_WHITE);
+      }
+  }
 
-    wnd_lcd = newwin(LCD_HEIGHT, LCD_WIDTH, LCD_ORIGINY, LCD_ORIGINX);
-    wnd_lcd_content = newwin(LCD_ROWS, LCD_COLS, LCD_ORIGINY+1, LCD_ORIGINX+1);
-    wnd_monitor = newwin(MONITOR_HEIGHT, MONITOR_WIDTH, MONITOR_ORIGINY, MONITOR_ORIGINX);
-    wnd_monitor_content = newwin(MONITOR_ROWS, MONITOR_COLS, MONITOR_ORIGINY+1, MONITOR_ORIGINX+1);
-    wnd_portmon = newwin(PORTMON_HEIGHT, PORTMON_WIDTH, PORTMON_ORIGINY, PORTMON_ORIGINX);
-    wnd_portmon_content = newwin(PORTMON_ROWS, PORTMON_COLS, PORTMON_ORIGINY+1, PORTMON_ORIGINX+1);
-    wnd_trace = newwin(TRACE_HEIGHT, TRACE_WIDTH, TRACE_ORIGINY, TRACE_ORIGINX);
-    wnd_trace_content = newwin(TRACE_ROWS, TRACE_COLS, TRACE_ORIGINY+1, TRACE_ORIGINX+1);
-    wnd_memory = newwin(MEMORY_HEIGHT, MEMORY_WIDTH, MEMORY_ORIGINY, MEMORY_ORIGINX);
-    wnd_memory_content = newwin(MEMORY_ROWS, MEMORY_COLS, MEMORY_ORIGINY+1, MEMORY_ORIGINX+1);
-    scrollok(wnd_trace_content, TRUE);
-    refresh();
-    box(wnd_lcd, 0, 0);
-    wcolor_set(wnd_lcd, 8, NULL);
-    mvwprintw(wnd_lcd, 0, 1, " LCD ");
-    box(wnd_monitor, 0, 0);
-    wcolor_set(wnd_monitor, 8, NULL);
-    mvwprintw(wnd_monitor, 0, 1, " CPU Monitor ");
-    box(wnd_portmon, 0, 0);
-    wcolor_set(wnd_portmon, 8, NULL);
-    mvwprintw(wnd_portmon, 0, 1, " Ports Monitor ");
-    box(wnd_trace, 0, 0);
-    wcolor_set(wnd_trace, 8, NULL);
-    mvwprintw(wnd_trace, 0, 1, " Bus Trace ");
-    box(wnd_memory, 0, 0);
-    wcolor_set(wnd_memory, 8, NULL);
-    mvwprintw(wnd_memory, 0, 1, " Memory  ");
-    wrefresh(wnd_lcd);
-    wrefresh(wnd_monitor);
-    wrefresh(wnd_portmon);
-    wrefresh(wnd_trace);
-    wrefresh(wnd_memory);
+  wnd_lcd = newwin(LCD_HEIGHT, LCD_WIDTH, LCD_ORIGINY, LCD_ORIGINX);
+  wnd_lcd_content = newwin(LCD_ROWS, LCD_COLS, LCD_ORIGINY+1, LCD_ORIGINX+1);
+  wnd_monitor = newwin(MONITOR_HEIGHT, MONITOR_WIDTH, MONITOR_ORIGINY, MONITOR_ORIGINX);
+  wnd_monitor_content = newwin(MONITOR_ROWS, MONITOR_COLS, MONITOR_ORIGINY+1, MONITOR_ORIGINX+1);
+  wnd_portmon = newwin(PORTMON_HEIGHT, PORTMON_WIDTH, PORTMON_ORIGINY, PORTMON_ORIGINX);
+  wnd_portmon_content = newwin(PORTMON_ROWS, PORTMON_COLS, PORTMON_ORIGINY+1, PORTMON_ORIGINX+1);
+  wnd_trace = newwin(TRACE_HEIGHT, TRACE_WIDTH, TRACE_ORIGINY, TRACE_ORIGINX);
+  wnd_trace_content = newwin(TRACE_ROWS, TRACE_COLS, TRACE_ORIGINY+1, TRACE_ORIGINX+1);
+  wnd_memory = newwin(MEMORY_HEIGHT, MEMORY_WIDTH, MEMORY_ORIGINY, MEMORY_ORIGINX);
+  wnd_memory_content = newwin(MEMORY_ROWS, MEMORY_COLS, MEMORY_ORIGINY+1, MEMORY_ORIGINX+1);
+  scrollok(wnd_trace_content, TRUE);
+  refresh();
+  box(wnd_lcd, 0, 0);
+  wcolor_set(wnd_lcd, 8, NULL);
+  mvwprintw(wnd_lcd, 0, 1, " LCD ");
+  box(wnd_monitor, 0, 0);
+  wcolor_set(wnd_monitor, 8, NULL);
+  mvwprintw(wnd_monitor, 0, 1, " CPU Monitor ");
+  box(wnd_portmon, 0, 0);
+  wcolor_set(wnd_portmon, 8, NULL);
+  mvwprintw(wnd_portmon, 0, 1, " Ports Monitor ");
+  box(wnd_trace, 0, 0);
+  wcolor_set(wnd_trace, 8, NULL);
+  mvwprintw(wnd_trace, 0, 1, " Bus Trace ");
+  box(wnd_memory, 0, 0);
+  wcolor_set(wnd_memory, 8, NULL);
+  mvwprintw(wnd_memory, 0, 1, " Memory  ");
+  wrefresh(wnd_lcd);
+  wrefresh(wnd_monitor);
+  wrefresh(wnd_portmon);
+  wrefresh(wnd_trace);
+  wrefresh(wnd_memory);
 }
 
 void finish_gui() {
