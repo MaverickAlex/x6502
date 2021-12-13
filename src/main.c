@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     int base_addr = 0x8000;
     bool sprint = false;
     bool lcd_8_bit = true;
-
+    
     int c;
     while ((c = getopt(argc, argv, "hb:r4")) != -1) {
         switch (c) {

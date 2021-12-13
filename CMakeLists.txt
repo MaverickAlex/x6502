@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(6502Emulator VERSION 0.1.0)
+project(6502Emulator C)
 
 include(CTest)
 enable_testing()
@@ -12,11 +12,11 @@ include_directories(${CURSES_INCLUDE_DIR})
 include_directories ( src )
 include_directories( src/opcode_handlers)
 
-add_executable(6502Emulator src/main.c)
+add_executable(x6502 src/main.c)
 
-target_link_libraries(6502Emulator ${CURSES_LIBRARIES})
+target_link_libraries(x6502 ${CURSES_LIBRARIES})
 
-target_sources(6502Emulator PRIVATE 
+target_sources(x6502 PRIVATE 
     src/cpu.c
     src/emu.c
     src/gui.c
