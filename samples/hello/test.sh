@@ -1,2 +1,2 @@
 #!/bin/bash
-x6502 hello.bin
+../../build/x6502 hello.bin
