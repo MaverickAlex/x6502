@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <getopt.h>
 
 void usage() {
     printf("x6502: a simple 65C02/65C22 emulator\n");  

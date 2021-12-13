@@ -6,8 +6,8 @@ enable_testing()
 
 
 find_package(Curses REQUIRED)
-include_directories(${CURSES_INCLUDE_DIR})
 
+include_directories(${CURSES_INCLUDE_DIR})
 
 include_directories ( src )
 include_directories( src/opcode_handlers)
