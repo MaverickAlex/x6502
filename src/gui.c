@@ -128,12 +128,14 @@ void init_gui()
   wrefresh(wnd_portmon);
   wrefresh(wnd_trace);
   wrefresh(wnd_memory);
+
   int screen_height, screen_width;
   getmaxyx(stdscr, screen_width, screen_height);
-  // Allocates storage
-  char *screen_msg = (char*)malloc(30 * sizeof(char));
-  sprintf(screen_msg, "Height %0d, Width %0d\n", screen_height, screen_width);
+  int size = snprintf(NULL, 0, "Height %d, Width %d\n", screen_height, screen_width);
+  char *screen_msg = (char *)malloc((size + 1) * sizeof(char));
+  snprintf(screen_msg, size + 1, "Height %d, Width %d\n", screen_height, screen_width);
   trace_emu( screen_msg);
+  free(screen_msg);
 }
 
 void finish_gui()
