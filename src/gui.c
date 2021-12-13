@@ -139,7 +139,7 @@ void trace_emu(char *msg) {
 }
 
 void update_gui(cpu *m) {
-  int read;
+  int read = 0;
   bool keep_going = false;
 
   do {
