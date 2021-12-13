@@ -12,7 +12,7 @@ include_directories(${CURSES_INCLUDE_DIR})
 include_directories ( src )
 include_directories( src/opcode_handlers)
 
-add_executable(x6502 src/main.c)
+add_executable(x6502 main.c)
 
 target_link_libraries(x6502 ${CURSES_LIBRARIES})
 
