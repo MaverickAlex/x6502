@@ -9,6 +9,6 @@ void init_gui();
 void finish_gui();
 void update_gui(cpu *m);
 
-void trace_emu(char *msg);
+void trace_emu(const char *msg);
 
 #endif
