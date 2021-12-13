@@ -10,9 +10,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <getopt.h>
 
 void usage() {
-    printf("x6502: a simple 65C02/65C22 emulator\n");
+    printf("x6502: a simple 65C02/65C22 emulator\n");  
     printf("usage: x6502 [OPTION]... FILE\n");
     printf("options:\n");
     printf("  -b ADDR the base address at which code will be loaded (in hex, default 8000)\n");
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
     int base_addr = 0x8000;
     bool sprint = false;
     bool lcd_8_bit = true;
-
+    
     int c;
     while ((c = getopt(argc, argv, "hb:r4")) != -1) {
         switch (c) {
