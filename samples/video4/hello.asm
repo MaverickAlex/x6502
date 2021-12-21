@@ -35,6 +35,15 @@ reset:
   lda #0         ; Clear RS/RW/E bits
   sta PORTA
 
+  lda #%00000110 ; ENTRY MODE SET Increment and shift cursor; don't shift display
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA  
+
   lda #%00000001 ; clear display
   sta PORTB
   lda #0         ; Clear RS/RW/E bits
@@ -43,15 +52,6 @@ reset:
   sta PORTA
   lda #0         ; Clear RS/RW/E bits
   sta PORTA
-
-  lda #%00000110 ; Increment and shift cursor; don't shift display
-  sta PORTB
-  lda #0         ; Clear RS/RW/E bits
-  sta PORTA
-  lda #E         ; Set E bit to send instruction
-  sta PORTA
-  lda #0         ; Clear RS/RW/E bits
-  sta PORTA  
 
   lda #"H"
   sta PORTB
@@ -107,14 +107,23 @@ reset:
   lda #RS         ; Clear E bits
   sta PORTA
 
-  lda #" "
+  lda #%00010100 ; shift cursor right
   sta PORTB
-  lda #RS         ; Set RS; Clear RW/E bits
+  lda #0         ; Clear RS/RW/E bits
   sta PORTA
-  lda #(RS | E)   ; Set E bit to send instruction
+  lda #E         ; Set E bit to send instruction
   sta PORTA
-  lda #RS         ; Clear E bits
+  lda #0         ; Clear RS/RW/E bits
   sta PORTA
+
+  ;lda #" "        ; not needed if we are shifing right
+  ;sta PORTB
+  ;lda #RS         ; Set RS; Clear RW/E bits
+  ;sta PORTA
+  ;lda #(RS | E)   ; Set E bit to send instruction
+  ;sta PORTA
+  ;lda #RS         ; Clear E bits
+  ;sta PORTA
 
   lda #"w"
   sta PORTB
@@ -123,6 +132,15 @@ reset:
   lda #(RS | E)   ; Set E bit to send instruction
   sta PORTA
   lda #RS         ; Clear E bits
+  sta PORTA
+
+  lda #%00011100 ; shift display right
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
   sta PORTA
 
   lda #"o"
