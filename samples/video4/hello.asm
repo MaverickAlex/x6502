@@ -35,7 +35,7 @@ reset:
   lda #0         ; Clear RS/RW/E bits
   sta PORTA
 
-  lda #%00000110 ; Increment and shift cursor; don't shift display
+  lda #%00000001 ; clear display
   sta PORTB
   lda #0         ; Clear RS/RW/E bits
   sta PORTA
@@ -43,6 +43,15 @@ reset:
   sta PORTA
   lda #0         ; Clear RS/RW/E bits
   sta PORTA
+
+  lda #%00000110 ; Increment and shift cursor; don't shift display
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA  
 
   lda #"H"
   sta PORTB
