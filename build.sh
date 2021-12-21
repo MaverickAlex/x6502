@@ -14,3 +14,4 @@ gcc -o $EXECUTABLE $objects_string $LDFLAGS
 
 rm $objects_string
 cp $EXECUTABLE ~/bin/
+rm $EXECUTABLE

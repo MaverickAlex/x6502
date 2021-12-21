@@ -1,2 +1,3 @@
 x6502
 .vscode
+build/*

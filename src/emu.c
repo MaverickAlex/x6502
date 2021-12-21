@@ -11,7 +11,7 @@
 void main_loop(cpu *m) {
     uint8_t opcode;
     uint8_t arg1, arg2, t1, t2;
-    int8_t s1;
+    int8_t s1 = 0;
     uint16_t r1, r2;
 
     // pc_offset is used to read from memory like a stream when processing

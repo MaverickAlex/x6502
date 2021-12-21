@@ -58,7 +58,7 @@ lcd_init_sequence:
   byte %00000000
  
 data:
-  string "Hello THERE lkajsdflkjasdlfkjfsdfsdfdsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf!"
+  string "Merry Christmas!!!!!"
 
   .org RESET_VECTOR
   word init
