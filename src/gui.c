@@ -18,7 +18,7 @@
 #define LCD_ORIGINX 0
 #define LCD_ORIGINY 0
 
-#define MONITOR_ROWS 4
+#define MONITOR_ROWS 5
 #define MONITOR_COLS 36
 
 #define MONITOR_HEIGHT (MONITOR_ROWS) + 2
@@ -154,6 +154,10 @@ void trace_emu(const char *msg)
   wrefresh(wnd_trace_content);
 }
 
+
+
+
+
 void update_gui(cpu *m)
 {
   int read = 0;
@@ -198,8 +202,23 @@ void update_gui(cpu *m)
 
     // start by populating the monitor
     mvwprintw(wnd_monitor_content, 0, 0, "PC: %04x, OP: %02x (%s)", m->pc_actual, m->opcode, translate_opcode(m->opcode));
-    mvwprintw(wnd_monitor_content, 1, 0, "ACC: %02x, X: %02x, Y: %02x, SP: %02x", m->ac, m->x, m->y, m->sp);
-    mvwprintw(wnd_monitor_content, 2, 0, "SR: %c%c-%c%c%c%c%c, cycle: %08x",
+    mvwprintw(wnd_monitor_content, 1, 0, "ACC-> HEX: %02x, DEC: %03d BIN: %c%c%c%c%c%c%c%c", 
+              m->ac,
+              m->ac,
+              m->ac & 0x80 ? '1' : '0',
+              m->ac & 0x40 ? '1' : '0',
+              m->ac & 0x20 ? '1' : '0',
+              m->ac & 0x10 ? '1' : '0',
+              m->ac & 0x08 ? '1' : '0',
+              m->ac & 0x04 ? '1' : '0',
+              m->ac & 0x02 ? '1' : '0',
+              m->ac & 0x01 ? '1' : '0');
+    mvwprintw(wnd_monitor_content, 2, 0, "X: %02x, Y: %02x, SP: %02x", m->x, m->y, m->sp);
+    
+
+    
+   
+    mvwprintw(wnd_monitor_content, 3, 0, "SR: %c%c-%c%c%c%c%c, cycle: %08x",
               m->sr & 0x80 ? 'N' : '-',
               m->sr & 0x40 ? 'V' : '-',
               m->sr & 0x10 ? 'B' : '-',
@@ -208,7 +227,7 @@ void update_gui(cpu *m)
               m->sr & 0x02 ? 'Z' : '-',
               m->sr & 0x01 ? 'C' : '-',
               m->cycle);
-    mvwprintw(wnd_monitor_content, 3, 0, "Clock mode: %s", m->clock_mode == CLOCK_FAST ? "FAST" : m->clock_mode == CLOCK_SLOW ? "SLOW"
+    mvwprintw(wnd_monitor_content, 4, 0, "Clock mode: %s", m->clock_mode == CLOCK_FAST ? "FAST" : m->clock_mode == CLOCK_SLOW ? "SLOW"
                                                                                                                               : "STEP");
     wrefresh(wnd_monitor_content);
 
