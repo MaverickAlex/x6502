@@ -2,16 +2,18 @@
 #include "via.h"
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 cpu * new_cpu() {
     cpu *m = malloc(sizeof(cpu));
+    srand(time(NULL));   // Initialization, should only be called once.
     m->clock_mode = CLOCK_STEP;
     m->opcode = 0;
     m->pc = 0;
     m->pc_set = false;
     m->pc_actual = 0;
     m->sr = FLAG_INTERRUPT;
-    m->sp = 0xFF;
+    m->sp = rand();
     m->interrupt_waiting = 0x00;
     memset(m->mem, 0xFF, MEMORY_SIZE);
     m->v1 = new_via();
@@ -20,6 +22,7 @@ cpu * new_cpu() {
     m->cycle = 0;
     return m;
 }
+
 
 void destroy_cpu(cpu* m) {
   destroy_via(m->v1);
