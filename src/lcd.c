@@ -28,8 +28,8 @@ void destroy_lcd(lcd *l)
 
 void process_command(lcd *l, bool rwb, uint8_t input);
 void process_data(lcd *l, bool rwb, uint8_t input);
-void rotateLeftOne(lcd *l);
-void rotateRightOne(lcd *l);
+void rotate_DDRAM_Left(lcd *l);
+void rotate_DDRAM_Right(lcd *l);
 
 
 void process_input(lcd *l, bool enable, bool rwb, bool data, uint8_t input)
@@ -136,12 +136,12 @@ void process_command(lcd *l, bool rwb, uint8_t input)
         trace_emu("SHIFT DISPLAY ");
         if((input & CMD_SHIFT_RIGHT) > 0)
         {
-          rotateRightOne(l);
+          rotate_DDRAM_Right(l);
           trace_emu("RIGHT\n");
         }
         else
         {
-          rotateLeftOne(l);
+          rotate_DDRAM_Left(l);
           trace_emu("LEFT\n");
         }
       }
@@ -203,7 +203,7 @@ void process_data(lcd *l, bool rwb, uint8_t input)
   }
 }
 
-void rotateRightOne(lcd * l)
+void rotate_DDRAM_Right(lcd * l)
 {
   uint8_t row,col,temp,col_min, col_max;
   //each row
@@ -222,7 +222,7 @@ void rotateRightOne(lcd * l)
   }
 }
 
-void rotateLeftOne(lcd * l)
+void rotate_DDRAM_Left(lcd * l)
 {
   uint8_t row,col,temp,col_min, col_max;
   //each row
