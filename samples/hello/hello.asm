@@ -1,4 +1,6 @@
-	org $8000
+;loads string into register a in a loop
+  
+  org $8000
 start:
 	lda #$02
 	sta $ff02
