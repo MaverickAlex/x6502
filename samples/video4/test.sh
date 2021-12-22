@@ -1,2 +1,2 @@
 #!/bin/bash
-../../build/x6502 hello.bin
+../../build/x6502 video4.bin
