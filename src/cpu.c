@@ -11,7 +11,7 @@ cpu * new_cpu() {
     m->pc_set = false;
     m->pc_actual = 0;
     m->sr = FLAG_INTERRUPT;
-    m->sp = 0xFF;
+    m->sp = rand();
     m->interrupt_waiting = 0x00;
     memset(m->mem, 0xFF, MEMORY_SIZE);
     m->v1 = new_via();
@@ -20,6 +20,7 @@ cpu * new_cpu() {
     m->cycle = 0;
     return m;
 }
+
 
 void destroy_cpu(cpu* m) {
   destroy_via(m->v1);

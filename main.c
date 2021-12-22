@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <curses.h>
+#include <time.h>
 
 void usage()
 {
@@ -25,7 +26,7 @@ void usage()
 
 int main(int argc, char *argv[])
 {
-
+  srand(time(NULL));   // Initialization, should only be called once.
   int base_addr = 0x8000;
   bool sprint = false;
   bool lcd_8_bit = true;
