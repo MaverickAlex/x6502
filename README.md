@@ -12,7 +12,7 @@ Project to compile/test rom files for the 6502 bread board computer featured: ht
 
 
 # Interface
-
+`
 
 ┌ LCD ───────────┐
 │
@@ -54,7 +54,7 @@ Project to compile/test rom files for the 6502 bread board computer featured: ht
 │                                    │└──────────────────────────────────────────────────────────────────────────┘
 │                                    │
 └────────────────────────────────────┘
-
+`
 
 ## License
 x6502 is freely available under the original 4-clause BSD license, the full text of which is included in the LICENSE file.
