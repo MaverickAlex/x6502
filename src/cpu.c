@@ -2,9 +2,11 @@
 #include "via.h"
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 cpu * new_cpu() {
     cpu *m = malloc(sizeof(cpu));
+    srand(time(NULL));   // Initialization, should only be called once.
     m->clock_mode = CLOCK_STEP;
     m->opcode = 0;
     m->pc = 0;
