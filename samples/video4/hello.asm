@@ -62,6 +62,33 @@ reset:
   lda #RS         ; Clear E bits
   sta PORTA
 
+  lda #%00011100 ; shift display right
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+
+  lda #%00011000 ; shift display left
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+
+  lda #%00011100 ; shift display right
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+
   lda #"e"
   sta PORTB
   lda #RS         ; Set RS; Clear RW/E bits
@@ -116,14 +143,6 @@ reset:
   lda #0         ; Clear RS/RW/E bits
   sta PORTA
 
-  ;lda #" "        ; not needed if we are shifing right
-  ;sta PORTB
-  ;lda #RS         ; Set RS; Clear RW/E bits
-  ;sta PORTA
-  ;lda #(RS | E)   ; Set E bit to send instruction
-  ;sta PORTA
-  ;lda #RS         ; Clear E bits
-  ;sta PORTA
 
   lda #"w"
   sta PORTB
@@ -132,15 +151,6 @@ reset:
   lda #(RS | E)   ; Set E bit to send instruction
   sta PORTA
   lda #RS         ; Clear E bits
-  sta PORTA
-
-  lda #%00011100 ; shift display right
-  sta PORTB
-  lda #0         ; Clear RS/RW/E bits
-  sta PORTA
-  lda #E         ; Set E bit to send instruction
-  sta PORTA
-  lda #0         ; Clear RS/RW/E bits
   sta PORTA
 
   lda #"o"
@@ -177,6 +187,24 @@ reset:
   lda #(RS | E)   ; Set E bit to send instruction
   sta PORTA
   lda #RS         ; Clear E bits
+  sta PORTA
+
+  lda #%00010100 ; shift cursor right
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+
+  lda #%00010000 ; shift cursor left
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #E         ; Set E bit to send instruction
+  sta PORTA
+  lda #0         ; Clear RS/RW/E bits
   sta PORTA
 
   lda #"!"

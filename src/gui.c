@@ -12,8 +12,8 @@
 #include "functions.h"
 #include "opcodes.h"
 
-#define LCD_HEIGHT (LCD_ROWS) + 2
-#define LCD_WIDTH (LCD_COLS) + 2
+#define LCD_HEIGHT (LCD_DISPLAY_ROWS) + 2
+#define LCD_WIDTH (LCD_DISPLAY_COLS) + 2
 
 #define LCD_ORIGINX 0
 #define LCD_ORIGINY 0
@@ -169,9 +169,9 @@ void update_gui(cpu *m)
     // update LCD contents
     if (!(m->l->initialized))
     {
-      for (int y = 0; y < LCD_ROWS; y += 2)
+      for (int y = 0; y < LCD_DISPLAY_ROWS; y +=2)
       {
-        for (int x = 0; x < LCD_COLS; x++)
+        for (int x = 0; x < LCD_DISPLAY_COLS; x++)
         {
           wcolor_set(wnd_lcd_content, 8, NULL);
           mvwprintw(wnd_lcd_content, y, x, " ");
@@ -182,11 +182,11 @@ void update_gui(cpu *m)
     }
     else
     {
-      for (int y = 0; y < LCD_ROWS; y += 2)
+      for (int y = 0; y < LCD_DISPLAY_ROWS; y++)
       {
-        for (int x = 0; x < LCD_COLS; x++)
+        for (int x = 0; x < LCD_DISPLAY_COLS; x++)
         {
-          int memloc = y * LCD_COLS + x;
+          int memloc = (y * LCD_COLS) + x;
           if (isprint(m->l->ddram[memloc]))
           {
             mvwprintw(wnd_lcd_content, y, x, "%c", m->l->ddram[memloc]);

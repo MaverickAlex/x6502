@@ -48,6 +48,15 @@ loop_data:
   inx                      ; Increase counter
   jmp loop_data
 end_prog:
+
+  lda #%00011000 ; shift display left
+  sta PORTB
+  lda #0         ; Clear RS/RW/E bits
+  sta PORTA
+  lda #PULSE     ; Set E PULSE to send instruction
+  sta PORTA
+  lda #NPULSE    ; Clear RS/RW/E bits
+  sta PORTA
   jmp end_prog
 
 lcd_init_sequence:
@@ -58,7 +67,7 @@ lcd_init_sequence:
   byte %00000000
  
 data:
-  string "Merry Christmas!!!!!"
+  string "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcd"
 
   .org RESET_VECTOR
   word init

@@ -22,6 +22,10 @@
 #define CMD_DM_DISPLAY_OFF    0x00
 #define CMD_DM_DISPLAY_ON     0x04
 
+#define CMD_SHIFT             0x10
+#define CMD_SHIFT_DISPLAY     0x08
+#define CMD_SHIFT_RIGHT       0x04
+
 #define CMD_FUNCTION_SET      0x20
 #define CMD_FS_FONT5x7        0x00
 #define CMD_FS_FONT5x10       0x04
@@ -35,8 +39,10 @@
 
 #define LCD_MEM_SIZE          0x100
 
-#define LCD_ROWS              4
-#define LCD_COLS              20
+#define LCD_ROWS              2  
+#define LCD_COLS              40
+#define LCD_DISPLAY_ROWS      2
+#define LCD_DISPLAY_COLS      16
 
 typedef struct {
   // settings
@@ -63,5 +69,7 @@ lcd* new_lcd();
 void destroy_lcd(lcd* l);
 
 void process_input(lcd *l, bool enable, bool rwb, bool data, uint8_t input);
+
+
 
 #endif

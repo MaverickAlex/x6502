@@ -28,6 +28,9 @@ void destroy_lcd(lcd *l)
 
 void process_command(lcd *l, bool rwb, uint8_t input);
 void process_data(lcd *l, bool rwb, uint8_t input);
+void rotateLeftOne(lcd *l);
+void rotateRightOne(lcd *l);
+
 
 void process_input(lcd *l, bool enable, bool rwb, bool data, uint8_t input)
 {
@@ -113,7 +116,7 @@ void process_command(lcd *l, bool rwb, uint8_t input)
     if ((input & CMD_FUNCTION_SET) && !(input & 0xc0))
     {
       l->function = input;
-      sprintf(message, "LCD function set to %02x\n", input);
+      snprintf(message, sizeof(message), "LCD function set to %02x\n", input);
       trace_emu(message);
     }
     else if ((input & CMD_DISPLAY_MODE) && !(input & 0xf0))
@@ -121,6 +124,41 @@ void process_command(lcd *l, bool rwb, uint8_t input)
       l->display_mode = input;
       sprintf(message, "LCD display mode set to %02x\n", input);
       trace_emu(message);
+    }
+    else if ((input & CMD_SHIFT) && !(input & 0xe0))
+    {
+      l->display_mode = input;
+      sprintf(message, "LCD shift mode set to %02x\n", input);
+      trace_emu(message);
+      //find out if we need to increment cusor or shift display
+      if((input & CMD_SHIFT_DISPLAY) > 0)
+      {
+        trace_emu("SHIFT DISPLAY ");
+        if((input & CMD_SHIFT_RIGHT) > 0)
+        {
+          rotateRightOne(l);
+          trace_emu("RIGHT\n");
+        }
+        else
+        {
+          rotateLeftOne(l);
+          trace_emu("LEFT\n");
+        }
+      }
+      else
+      {
+        trace_emu("SHIFT CURSOR ");
+        if((input & CMD_SHIFT_RIGHT) > 0)
+        {
+          l->cursor++;
+          trace_emu("RIGHT\n");
+        }
+        else
+        {
+          l->cursor--;
+          trace_emu("LEFT\n");
+        }
+      }
     }
     else if ((input & CMD_ENTRY_MODE) && !(input & 0xf8))
     {
@@ -162,5 +200,43 @@ void process_data(lcd *l, bool rwb, uint8_t input)
     {
       l->cursor = 0;
     }
+  }
+}
+
+void rotateRightOne(lcd * l)
+{
+  uint8_t row,col,temp,col_min, col_max;
+  //each row
+  for(row = 0; row <= LCD_ROWS; row++)
+  {
+    col_min = (LCD_COLS * row);
+    col_max = (LCD_COLS * row) + LCD_COLS -1;
+    //get last item in row  
+    temp = l->ddram[col_max];
+    //walk backwards 
+    for(col=col_max; col > col_min; col--)
+    {
+      l->ddram[col] = l->ddram[col - 1];
+    }
+    l->ddram[col_min] = temp;
+  }
+}
+
+void rotateLeftOne(lcd * l)
+{
+  uint8_t row,col,temp,col_min, col_max;
+  //each row
+  for(row = 0; row <= LCD_ROWS; row++)
+  {
+    col_min = (LCD_COLS * row);
+    col_max = (LCD_COLS * row) + LCD_COLS -1;
+    //get last item in row  
+    temp = l->ddram[col_min];
+    //walk forwards 
+    for(col=col_min; col < col_max; col++)
+    {
+      l->ddram[col] = l->ddram[col + 1];
+    }
+    l->ddram[col_max] = temp;
   }
 }
