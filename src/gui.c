@@ -230,14 +230,19 @@ void update_gui(cpu *m)
     for (int off16 = 0; off16 < 32; off16++)
     {
       mvwprintw(wnd_memory_content, off16, 0, "%04x", (memory_start << 8) + off16 * 0x10);
-
       for (int offset = 0; offset < 16; offset++)
       {
         uint16_t curAddress = ((memory_start << 8) + off16 * 0x10 + offset);
         if (m->pc_actual == curAddress)
         {
-          wcolor_set(wnd_memory_content, COLOR_BLUE, NULL);
+          wcolor_set(wnd_memory_content, COLOR_RED, NULL);
         }
+        switch (m->opcode) {
+          #include "memory_highlights/store.h"
+          #include "memory_highlights/load.h"
+        }
+        
+
 
         mvwprintw(wnd_memory_content, off16, 6 + offset * 3, "%02x ", m->mem[curAddress]);
         mvwprintw(wnd_memory_content, off16, 56 + offset, "%c", isprint(m->mem[curAddress]) ? m->mem[curAddress] : '.');

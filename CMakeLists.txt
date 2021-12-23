@@ -10,7 +10,8 @@ find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 
 include_directories ( src )
-include_directories( src/opcode_handlers)
+include_directories( src/opcode_handlers )
+include_directories( src/memory_highlights )
 
 add_executable(x6502 main.c)
 
