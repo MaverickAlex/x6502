@@ -37,6 +37,9 @@
 #define CMD_CGRAM_SET         0x40
 #define CMD_DDRAM_SET         0x80
 
+#define CMD_BUSY              0x80
+#define BUSY_CYCLES           2
+
 #define LCD_MEM_SIZE          0x100
 
 #define LCD_ROWS              2  
@@ -62,6 +65,7 @@ typedef struct {
   uint8_t ddram[LCD_MEM_SIZE];
   // cursor position
   uint8_t cursor;
+  uint8_t busy;
 } lcd;
 
 lcd* new_lcd();
