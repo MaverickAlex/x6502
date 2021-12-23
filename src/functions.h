@@ -43,7 +43,7 @@ static const bool isValidWrite(uint16_t address)
 static inline uint8_t read_byte(cpu *m, uint16_t address)
 {
   static char trace_entry[80];
-  sprintf(trace_entry, "Bus addr:%04x mode:r value:%02x\n", address, m->mem[address]);
+  sprintf(trace_entry, "Bus addr:%04x mode:r value:%02x %s\n", address, m->mem[address], memType(address));
   trace_emu(trace_entry);
   return m->mem[address];
 }
