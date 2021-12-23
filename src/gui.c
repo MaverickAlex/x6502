@@ -237,6 +237,10 @@ void update_gui(cpu *m)
         {
           wcolor_set(wnd_memory_content, COLOR_RED, NULL);
         }
+        if(m->dirty_mem_addr == curAddress)
+        {
+          wcolor_set(wnd_memory_content,COLOR_YELLOW, NULL);
+        }
         switch (m->opcode) {
           #include "memory_highlights/store.h"
           #include "memory_highlights/load.h"
