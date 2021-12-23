@@ -237,16 +237,19 @@ void update_gui(cpu *m)
         {
           wcolor_set(wnd_memory_content, COLOR_RED, NULL);
         }
-        if(m->dirty_mem_addr == curAddress)
+        if (m->dirty_mem_addr == curAddress)
         {
-          wcolor_set(wnd_memory_content,COLOR_YELLOW, NULL);
+          wcolor_set(wnd_memory_content, COLOR_YELLOW, NULL);
         }
-        switch (m->opcode) {
+        if (m->read_mem_addr == curAddress)
+        {
+          wcolor_set(wnd_memory_content, COLOR_GREEN, NULL);
+        }
+        switch (m->opcode)
+        {
           #include "memory_highlights/store.h"
           #include "memory_highlights/load.h"
         }
-        
-
 
         mvwprintw(wnd_memory_content, off16, 6 + offset * 3, "%02x ", m->mem[curAddress]);
         mvwprintw(wnd_memory_content, off16, 56 + offset, "%c", isprint(m->mem[curAddress]) ? m->mem[curAddress] : '.');

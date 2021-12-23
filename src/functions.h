@@ -39,12 +39,22 @@ static const bool isValidWrite(uint16_t address)
   }
   return false;
 }
+// mark a memory address as read
+static inline void mark_read(cpu *m, uint16_t address)
+{
+  if (isValidWrite(address))
+  {
+    // m->emu_flags |= EMU_FLAG_DIRTY;
+    m->read_mem_addr = address;
+  }
+}
 
 static inline uint8_t read_byte(cpu *m, uint16_t address)
 {
   static char trace_entry[80];
   sprintf(trace_entry, "Bus addr:%04x mode:r value:%02x %s\n", address, m->mem[address], memType(address));
   trace_emu(trace_entry);
+  mark_read(m,address);
   return m->mem[address];
 }
 
@@ -202,5 +212,6 @@ static inline void mark_dirty(cpu *m, uint16_t address)
     m->dirty_mem_addr = address;
   }
 }
+
 
 #endif
