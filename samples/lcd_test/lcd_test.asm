@@ -16,6 +16,8 @@ RESET_VECTOR  .equ $fffc
 
   .org ROM_START
 init:
+  lda #"o"
+  sta data                 ; WRITE TO ROM SHOULD FAIL
   lda #%11100000           ; PA5, PA6 and PA7 are outputs
   sta DDRA 
   lda #%11111111           ; PORTB is all output
