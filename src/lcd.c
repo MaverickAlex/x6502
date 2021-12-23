@@ -7,7 +7,8 @@
 lcd *new_lcd()
 {
   lcd *l = malloc(sizeof(lcd));
-
+  
+  l->busy = 0;
   l->initialized = false;
   l->enable_latch = false;
   l->fourbit_mode = false;
@@ -28,8 +29,10 @@ void destroy_lcd(lcd *l)
 
 void process_command(lcd *l, bool rwb, uint8_t input);
 void process_data(lcd *l, bool rwb, uint8_t input);
-void rotate_DDRAM_Left(lcd *l);
 void rotate_DDRAM_Right(lcd *l);
+void rotate_DDRAM_Left(lcd *l);
+
+void advanceCursor(bool right);
 
 
 void process_input(lcd *l, bool enable, bool rwb, bool data, uint8_t input)
@@ -99,6 +102,16 @@ void process_input(lcd *l, bool enable, bool rwb, bool data, uint8_t input)
         }
       }
     }
+    else
+    {
+      //are we asking if lcd is busy, if so need to set database to zeros
+      if(rwb && (input && CMD_BUSY ))
+      {
+        l->data = 0x00;
+      }
+      
+    }
+
   }
   else if (!enable && l->enable_latch)
   { // falling edge on enable
@@ -133,30 +146,25 @@ void process_command(lcd *l, bool rwb, uint8_t input)
       //find out if we need to increment cusor or shift display
       if((input & CMD_SHIFT_DISPLAY) > 0)
       {
-        trace_emu("SHIFT DISPLAY ");
         if((input & CMD_SHIFT_RIGHT) > 0)
         {
           rotate_DDRAM_Right(l);
-          trace_emu("RIGHT\n");
         }
         else
         {
           rotate_DDRAM_Left(l);
-          trace_emu("LEFT\n");
         }
       }
       else
       {
-        trace_emu("SHIFT CURSOR ");
         if((input & CMD_SHIFT_RIGHT) > 0)
         {
           l->cursor++;
-          trace_emu("RIGHT\n");
         }
         else
         {
+
           l->cursor--;
-          trace_emu("LEFT\n");
         }
       }
     }
@@ -185,9 +193,28 @@ void process_command(lcd *l, bool rwb, uint8_t input)
   }
   else
   {
-    l->data = l->cursor;
+      if((input && CMD_BUSY ))
+      {
+        if(l->busy < BUSY_CYCLES)
+        {
+          l->busy++;  //increment          
+          l->data = CMD_BUSY;
+        }
+        else
+        {
+          l->data = l->cursor;
+          l->busy = 0;
+        }
+                
+      }
+      else
+      {
+        trace_emu("LCD event unhandled");
+      }
+    
   }
 }
+
 void process_data(lcd *l, bool rwb, uint8_t input)
 {
   char message[32];
@@ -202,6 +229,8 @@ void process_data(lcd *l, bool rwb, uint8_t input)
     }
   }
 }
+
+
 
 void rotate_DDRAM_Right(lcd * l)
 {

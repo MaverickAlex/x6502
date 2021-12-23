@@ -20,12 +20,11 @@ write_data:
   rts                      ; Return
 
 pulse:
-  sta $ff00
+  sta $00,x
   rts                      ; Return from subroutine
 
 data:
   string "Merry Christmas!"
-
   .org RESET_VECTOR
   word data_display
   word $0000
