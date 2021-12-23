@@ -198,7 +198,7 @@ void process_command(lcd *l, bool rwb, uint8_t input)
         if(l->busy < BUSY_CYCLES)
         {
           l->busy++;  //increment          
-          l->data = CMD_BUSY;
+          l->data = CMD_BUSY | l->cursor;
         }
         else
         {
