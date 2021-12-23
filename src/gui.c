@@ -97,7 +97,7 @@ void init_gui()
   }
 
   wnd_lcd = newwin(LCD_HEIGHT, LCD_WIDTH, LCD_ORIGINY, LCD_ORIGINX);
-  wnd_lcd_content = newwin(LCD_ROWS, LCD_COLS, LCD_ORIGINY + 1, LCD_ORIGINX + 1);
+  wnd_lcd_content = newwin(LCD_DISPLAY_ROWS, LCD_DISPLAY_COLS, LCD_ORIGINY + 1, LCD_ORIGINX + 1);
   wnd_monitor = newwin(MONITOR_HEIGHT, MONITOR_WIDTH, MONITOR_ORIGINY, MONITOR_ORIGINX);
   wnd_monitor_content = newwin(MONITOR_ROWS, MONITOR_COLS, MONITOR_ORIGINY + 1, MONITOR_ORIGINX + 1);
   wnd_portmon = newwin(PORTMON_HEIGHT, PORTMON_WIDTH, PORTMON_ORIGINY, PORTMON_ORIGINX);
@@ -174,7 +174,7 @@ void update_gui(cpu *m)
         for (int x = 0; x < LCD_DISPLAY_COLS; x++)
         {
           wcolor_set(wnd_lcd_content, 8, NULL);
-          mvwprintw(wnd_lcd_content, y, x, " ");
+          mvwprintw(wnd_lcd_content, y, x, " ", x);
           wcolor_set(wnd_lcd_content, 7, NULL);
           mvwprintw(wnd_lcd_content, y + 1, x, " ");
         }
