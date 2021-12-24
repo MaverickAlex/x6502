@@ -18,6 +18,7 @@ RS = %00100000
 
   .org $8000
 start:
+  cld
   lda #$00    
   ldx #$ff 
   txs
@@ -56,7 +57,10 @@ start_fib:
   sta bNum
 add_fib:
   lda aNum      ; load a
+  clc
+  sed
   adc bNum      ; add b
+  cld 
   bcs end_prog  ; if carry bit is set we need to expand to two byte numbers for now quit    
   sta xNum      ; store in x
   jsr printStep
