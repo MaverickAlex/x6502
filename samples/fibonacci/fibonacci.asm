@@ -56,11 +56,9 @@ start_fib:
   lda #1
   sta bNum
 add_fib:
+  clc 
   lda aNum      ; load a
-  clc
-  sed
   adc bNum      ; add b
-  cld 
   bcs end_prog  ; if carry bit is set we need to expand to two byte numbers for now quit    
   sta xNum      ; store in x
   jsr printStep
