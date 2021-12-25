@@ -151,13 +151,19 @@ static inline uint8_t bcd(uint8_t val)
   return 10 * (val >> 4) + (0x0F & val);
 }
 
+//convert hex back to binary packed decimal
+static inline uint8_t hexTo_bdc(uint8_t val)
+{
+  return (val / 10) << 4 | (val % 10);
+}
+
 static inline void add(cpu *m, uint16_t r1)
 {
   // committing a cardinal sin for my sanity's sake. callers should initialize
   // r1 to the argument to the add.
   if (get_flag(m, FLAG_DECIMAL))
   {
-    r1 = bcd(r1) + bcd(m->ac) + get_flag(m, FLAG_CARRY);
+    r1 = hexTo_bdc(bcd(r1) + bcd(m->ac) + get_flag(m, FLAG_CARRY));
     set_flag(m, FLAG_CARRY, r1 > 99);
   }
   else
