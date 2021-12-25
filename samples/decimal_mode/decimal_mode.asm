@@ -3,8 +3,8 @@ numB = $10    ;10 digits 5 bytes
 sum  = $20    ;storage for sum
 output = $30  ;output string
 
-xcnt = 100
-ycnt = 200
+xcnt = 255
+ycnt = 255
 
 PORTB             = $6000
 PORTA             = $6001
@@ -18,44 +18,6 @@ RS = %00100000
 
   .org $8000
 init:
-
-
-  SED      ; Decimal mode (BCD addition: 58 + 46 + 1 = 105)
-  SEC      ; Note: carry is set, not clear!
-  LDA #$58
-  ADC #$46 ; After this instruction, C = 1, A = $05
-
-  SED      ; Decimal mode (BCD addition: 12 + 34 = 46)
-  CLC
-  LDA #$12
-  ADC #$34 ; After this instruction, C = 0, A = $46
-
-  SED      ; Decimal mode (BCD addition: 15 + 26 = 41)
-  CLC
-  LDA #$15
-  ADC #$26 ; After this instruction, C = 0, A = $41
-
-  SED      ; Decimal mode (BCD addition: 81 + 92 = 173)
-  CLC
-  LDA #$81
-  ADC #$92 ; After this instruction, C = 1, A = $73
-
-  SED      ; Decimal mode (BCD subtraction: 46 - 12 = 34)
-  SEC
-  LDA #$46
-  SBC #$12 ; After this instruction, C = 1, A = $34)
-
-  SED      ; Decimal mode (BCD subtraction: 40 - 13 = 27)
-  SEC
-  LDA #$40
-  SBC #$13 ; After this instruction, C = 1, A = $27)
-
-  SED      ; Decimal mode (BCD subtraction: 32 - 2 - 1 = 29)
-  CLC      ; Note: carry is clear, not set!
-  LDA #$32
-  SBC #$02 ; After this instruction, C = 1, A = $29)
-
-
   cld             ;clear decimal mode
   clc             ;clear carry bit
   lda #$00    
@@ -79,7 +41,7 @@ zero_mem:
   STA output,x
   
   SED      
-  LDA #$99
+  LDA #$00
   STA numA
   lda #$01
   STA numB
@@ -90,9 +52,9 @@ add_loop:
   SED
   lda numA,x
   adc numB,x
-  CLD
   sta sum ,x
   inx
+  BCS add_loop
   cpx #16
   bne add_loop
 
@@ -121,7 +83,7 @@ move_sum_to_numA:
   jmp add_number
 
 print_decimal_byte
-  rts         ;skip
+  ;rts         ;skip
   PHA 
   and #%11110000  
   CLD
@@ -141,7 +103,7 @@ print_decimal_byte
   rts
 
 init_lcd:
-  rts             ;skip
+  ;rts             ;skip
   pha
   lda #%11111111 ; Set all pins on port B to output
   sta DDRB
@@ -177,7 +139,7 @@ lcdbusy:
   pla
   rts
 lcd_instruction:
-  rts             ;skip
+  ;rts             ;skip
   jsr lcd_wait
   sta PORTB
   lda #0         ; Clear RS/RW/E bits
@@ -188,7 +150,7 @@ lcd_instruction:
   sta PORTA
   rts
 print_char:     ; prints character on a register
-  rts           ;skip
+  ;rts           ;skip
   pha
   jsr lcd_wait
   sta PORTB
@@ -203,7 +165,7 @@ print_char:     ; prints character on a register
 
 
 start_delay:
-  rts         ;skip
+  ;rts         ;skip
   ldy  #ycnt   ; (2 cycles)
   ldx  #xcnt   ; (2 cycles)
 delay:  
