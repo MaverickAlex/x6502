@@ -62,6 +62,7 @@ next_fib_byte:
   adc bNum,x      ; add b
   sta xNum,x      ; store in low x
   inx
+  bcs next_fib_byte
   cpx #16
   bne next_fib_byte
   jsr printStep
