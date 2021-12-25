@@ -54,7 +54,7 @@ static inline uint8_t read_byte(cpu *m, uint16_t address)
   static char trace_entry[80];
   sprintf(trace_entry, "Bus addr:%04x mode:r value:%02x %s\n", address, m->mem[address], memType(address));
   trace_emu(trace_entry);
-  mark_read(m,address);
+  mark_read(m, address);
   return m->mem[address];
 }
 
@@ -151,10 +151,34 @@ static inline uint8_t bcd(uint8_t val)
   return 10 * (val >> 4) + (0x0F & val);
 }
 
-//convert hex back to binary packed decimal
-static inline uint8_t hexTo_bdc(uint8_t val)
+// convert hex back to binary packed decimal
+//  static uint8_t hexTo_bdc(uint8_t val)
+//  {
+//    uint8_t y = 0;
+//    if (val / 10 < 10)
+//    {
+//      y = (val / 10) << 4;
+//    }
+//    y = (y << 4)| (val % 10);
+//    return (y);
+//  }
+
+static uint8_t convert2BCD(uint8_t hexData)
 {
-  return (val / 10) << 4 | (val % 10);
+  static char trace_entry[80];
+  uint8_t bcdHI = hexData / 10;
+  sprintf(trace_entry, "bcdHI: %02d \n", bcdHI);
+  trace_emu(trace_entry);
+  while(bcdHI >= 10)
+  {
+    bcdHI -= 10;
+  }
+  sprintf(trace_entry, "bcdHI: %02d \n", bcdHI);
+  trace_emu(trace_entry);
+  uint8_t bcdLO = hexData % 10;
+  uint8_t bcdData = (bcdHI << 4) + bcdLO;
+
+  return bcdData;
 }
 
 static inline void add(cpu *m, uint16_t r1)
@@ -163,8 +187,9 @@ static inline void add(cpu *m, uint16_t r1)
   // r1 to the argument to the add.
   if (get_flag(m, FLAG_DECIMAL))
   {
-    r1 = hexTo_bdc(bcd(r1) + bcd(m->ac) + get_flag(m, FLAG_CARRY));
+    r1 = bcd(r1) + bcd(m->ac) + get_flag(m, FLAG_CARRY);
     set_flag(m, FLAG_CARRY, r1 > 99);
+    r1 = convert2BCD(r1);
   }
   else
   {
@@ -218,6 +243,5 @@ static inline void mark_dirty(cpu *m, uint16_t address)
     m->dirty_mem_addr = address;
   }
 }
-
 
 #endif
