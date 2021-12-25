@@ -202,6 +202,7 @@ static inline void sub(cpu *m, uint16_t r1)
   {
     r1 = bcd(m->ac) - bcd(r1) - !get_flag(m, FLAG_CARRY);
     set_flag(m, FLAG_OVERFLOW, r1 > 99 || r1 < 0);
+    r1 = convert2BCD(r1);
   }
   else
   {
