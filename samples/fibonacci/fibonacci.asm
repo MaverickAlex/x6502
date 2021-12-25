@@ -23,7 +23,6 @@ start:
   ldx #$ff 
   txs
   ldx #$0f 
-  ldx #$2
 zeroMemory:
   lda #0
   sta xNum,x
@@ -57,15 +56,24 @@ start_fib:
   sta bNum
 add_fib:
   clc 
-  lda aNum      ; load a
-  adc bNum      ; add b
-  bcs end_prog  ; if carry bit is set we need to expand to two byte numbers for now quit    
-  sta xNum      ; store in x
+  ldx #0
+next_fib_byte:
+  lda aNum,x      ; load low a
+  adc bNum,x      ; add b
+  sta xNum,x      ; store in low x
+  inx
+  cpx #16
+  bne next_fib_byte
   jsr printStep
-  lda bNum      ; load b
-  sta aNum      ; store b in a
-  lda xNum      ; load x
-  sta bNum      ; store in b
+  ldx #0
+next_fib_copy:
+  lda bNum, x    ; load b
+  sta aNum, x    ; store b in a
+  lda xNum, x    ; load x
+  sta bNum, x    ; store in b
+  inx
+  cpx #16
+  bne next_fib_copy
   jmp add_fib   ; next interation
 
 printStep:
