@@ -83,8 +83,6 @@ void init_gui()
   keypad(stdscr, TRUE);
   curs_set(0);
 
-  
-
   io_supports_paint = (has_colors() != FALSE);
   if (io_supports_paint)
   {
@@ -134,7 +132,7 @@ void init_gui()
   int size = snprintf(NULL, 0, "Height %d, Width %d\n", screen_height, screen_width);
   char *screen_msg = (char *)malloc((size + 1) * sizeof(char));
   snprintf(screen_msg, size + 1, "Height %d, Width %d\n", screen_height, screen_width);
-  trace_emu( screen_msg);
+  trace_emu(screen_msg);
   free(screen_msg);
 }
 
@@ -154,10 +152,6 @@ void trace_emu(const char *msg)
   wrefresh(wnd_trace_content);
 }
 
-
-
-
-
 void update_gui(cpu *m)
 {
   int read = 0;
@@ -169,7 +163,7 @@ void update_gui(cpu *m)
     // update LCD contents
     if (!(m->l->initialized))
     {
-      for (int y = 0; y < LCD_DISPLAY_ROWS; y +=2)
+      for (int y = 0; y < LCD_DISPLAY_ROWS; y += 2)
       {
         for (int x = 0; x < LCD_DISPLAY_COLS; x++)
         {
@@ -202,8 +196,8 @@ void update_gui(cpu *m)
 
     // start by populating the monitor
     mvwprintw(wnd_monitor_content, 0, 0, "PC: %04x, OP: %02x (%s)", m->pc_actual, m->opcode, translate_opcode(m->opcode));
-    mvwprintw(wnd_monitor_content, 1, 0, "ACC-> '%c', %02x, %03d, %c%c%c%c%c%c%c%c", 
-              isprint(m->ac) ? m->ac: '~' ,
+    mvwprintw(wnd_monitor_content, 1, 0, "ACC-> '%c', %02x, %03d, %c%c%c%c%c%c%c%c",
+              isprint(m->ac) ? m->ac : '~',
               m->ac,
               m->ac,
               m->ac & 0x80 ? '1' : '0',
@@ -215,10 +209,7 @@ void update_gui(cpu *m)
               m->ac & 0x02 ? '1' : '0',
               m->ac & 0x01 ? '1' : '0');
     mvwprintw(wnd_monitor_content, 2, 0, "X: %02x, Y: %02x, SP: %02x", m->x, m->y, m->sp);
-    
 
-    
-   
     mvwprintw(wnd_monitor_content, 3, 0, "SR: %c%c-%c%c%c%c%c, cycle: %08x",
               m->sr & 0x80 ? 'N' : '-',
               m->sr & 0x40 ? 'V' : '-',
@@ -239,11 +230,30 @@ void update_gui(cpu *m)
     for (int off16 = 0; off16 < 32; off16++)
     {
       mvwprintw(wnd_memory_content, off16, 0, "%04x", (memory_start << 8) + off16 * 0x10);
-
       for (int offset = 0; offset < 16; offset++)
       {
-        mvwprintw(wnd_memory_content, off16, 6 + offset * 3, "%02x ", m->mem[(memory_start << 8) + off16 * 0x10 + offset]);
-        mvwprintw(wnd_memory_content, off16, 56 + offset, "%c", isprint(m->mem[(memory_start << 8) + off16 * 0x10 + offset]) ? m->mem[(memory_start << 8) + off16 * 0x10 + offset] : '.');
+        uint16_t curAddress = ((memory_start << 8) + off16 * 0x10 + offset);
+        if (m->pc_actual == curAddress)
+        {
+          wcolor_set(wnd_memory_content, COLOR_RED, NULL);
+        }
+        if (m->dirty_mem_addr == curAddress)
+        {
+          wcolor_set(wnd_memory_content, COLOR_YELLOW, NULL);
+        }
+        if (m->read_mem_addr == curAddress)
+        {
+          wcolor_set(wnd_memory_content, COLOR_GREEN, NULL);
+        }
+        switch (m->opcode)
+        {
+          #include "memory_highlights/store.h"
+          #include "memory_highlights/load.h"
+        }
+
+        mvwprintw(wnd_memory_content, off16, 6 + offset * 3, "%02x ", m->mem[curAddress]);
+        mvwprintw(wnd_memory_content, off16, 56 + offset, "%c", isprint(m->mem[curAddress]) ? m->mem[curAddress] : '.');
+        wcolor_set(wnd_memory_content, COLOR_WHITE, NULL);
       }
     }
     wrefresh(wnd_memory_content);
