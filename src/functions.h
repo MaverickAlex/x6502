@@ -165,19 +165,13 @@ static inline uint8_t bcd(uint8_t val)
 
 static uint8_t convert2BCD(uint8_t hexData)
 {
-  static char trace_entry[80];
   uint8_t bcdHI = hexData / 10;
-  sprintf(trace_entry, "bcdHI: %02d \n", bcdHI);
-  trace_emu(trace_entry);
-  while(bcdHI >= 10)
+  while (bcdHI >= 10)
   {
     bcdHI -= 10;
   }
-  sprintf(trace_entry, "bcdHI: %02d \n", bcdHI);
-  trace_emu(trace_entry);
   uint8_t bcdLO = hexData % 10;
   uint8_t bcdData = (bcdHI << 4) + bcdLO;
-
   return bcdData;
 }
 
