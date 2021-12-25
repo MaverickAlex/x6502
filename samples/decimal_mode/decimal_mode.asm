@@ -3,8 +3,8 @@ numB = $10    ;10 digits 5 bytes
 sum  = $20    ;storage for sum
 output = $30  ;output string
 
-xcnt = 255
-ycnt = 255
+xcnt = 1
+ycnt = 1
 
 PORTB             = $6000
 PORTA             = $6001
@@ -83,7 +83,6 @@ move_sum_to_numA:
   jmp add_number
 
 print_decimal_byte
-  ;rts         ;skip
   PHA 
   and #%11110000  
   CLD
