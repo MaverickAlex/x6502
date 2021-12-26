@@ -196,10 +196,11 @@ void update_gui(cpu *m)
 
     // start by populating the monitor
     mvwprintw(wnd_monitor_content, 0, 0, "PC: %04x, OP: %02x (%s)", m->pc_actual, m->opcode, translate_opcode(m->opcode));
-    mvwprintw(wnd_monitor_content, 1, 0, "ACC-> '%c', %02x, %03d, %c%c%c%c%c%c%c%c",
+    mvwprintw(wnd_monitor_content, 1, 0, "ACC-> '%c', %02x, %03u, %04d, %c%c%c%c%c%c%c%c",
               isprint(m->ac) ? m->ac : '~',
               m->ac,
               m->ac,
+              (int8_t) m->ac,
               m->ac & 0x80 ? '1' : '0',
               m->ac & 0x40 ? '1' : '0',
               m->ac & 0x20 ? '1' : '0',
