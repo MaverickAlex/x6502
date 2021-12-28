@@ -81,6 +81,8 @@ print_decimal_byte
   adc #"0"
   jsr print_char
   rts
+
+
   
 lcd_commands:
   byte %00111000 ;0 Set 8-bit mode; 2-line display; 5x8 font
