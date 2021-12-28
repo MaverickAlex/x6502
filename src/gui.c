@@ -250,6 +250,7 @@ void update_gui(cpu *m)
         {
           #include "memory_highlights/store.h"
           #include "memory_highlights/load.h"
+          #include "memory_highlights/jump.h"
         }
 
         mvwprintw(wnd_memory_content, off16, 6 + offset * 3, "%02x ", m->mem[curAddress]);
