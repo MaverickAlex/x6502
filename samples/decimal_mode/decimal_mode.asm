@@ -149,7 +149,6 @@ lcd_instruction:
   sta PORTA
   rts
 print_char:     ; prints character on a register
-  ;rts           ;skip
   pha
   jsr lcd_wait
   sta PORTB
@@ -164,7 +163,6 @@ print_char:     ; prints character on a register
 
 
 start_delay:
-  ;rts         ;skip
   ldy  #ycnt   ; (2 cycles)
   ldx  #xcnt   ; (2 cycles)
 delay:  
