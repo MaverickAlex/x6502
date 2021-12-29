@@ -75,32 +75,31 @@ btd_ignore_result:
   clc
   adc #"0"
   ldy BTD_INDEX
-  sta BTD_DECIMAL_NUM,y  ;; this is probably wrong order
+  sta BTD_DECIMAL_NUM , y  ;; this is probably wrong order
   inc BTD_INDEX
   ; If value < 0 continue dividing
   lda BTD_VALUE
   ora BTD_VALUE + 1
   bne btd_divide 
   ;; might have to continute this pattern
-  jmp bts_done
+  
   ;; need to swap number order
-  ldx #0
-  ldy BTD_INDEX
-btd_swap:
-  lda BTD_DECIMAL_NUM , x
-  sta BTD_TEMP
-  lda BTD_DECIMAL_NUM , y
-  sta BTD_DECIMAL_NUM , x
-  inx
-  dey
   dec BTD_INDEX
-  bne btd_swap
-  lda BTD_DECIMAL_NUM , x
-  sta BTD_TEMP
-  lda BTD_DECIMAL_NUM , y
-  sta BTD_DECIMAL_NUM , x
-
 bts_done:
+  rts
+
+bts_getNextChar:
+  phx
+  ldx BTD_INDEX
+  cpx #$ff
+  beq bts_getNextChar_Empty
+  lda BTD_DECIMAL_NUM, x
+  dec BTD_INDEX
+  jmp bts_getNextChar_exit
+bts_getNextChar_Empty:
+  lda #0
+bts_getNextChar_exit:
+  plx
   rts
 
 

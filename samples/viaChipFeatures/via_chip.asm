@@ -9,16 +9,21 @@ SHIFT_COUNT = $04
   lda #$ff
   sta BTD_VALUE
   sta BTD_VALUE + 1
+  sta BTD_VALUE + 2
+  sta BTD_VALUE + 3
   jsr btd_start
-
-
-  lda #"_"
   ldx #0
-add_A:
-  sta LCD_LINE,x
+getNumber:
+  jsr bts_getNextChar
+  cmp #0
+  beq finishNumber
+  sta LCD_LINE ,x
   inx
-  cpx #32
-  bne add_A
+  cmp #0
+  bne getNumber
+finishNumber:
+
+
   jsr lcd_updateScreen
 
   jmp exit
@@ -64,7 +69,7 @@ shift_irq:
   bne shift_irq_work
   inc SHIFT_COUNT + 3
   bne shift_irq_work
-  inc SHIFT_COUNT+ 4
+  inc SHIFT_COUNT + 4
   bne shift_irq_work 
 shift_irq_work
   lda #%10101010
