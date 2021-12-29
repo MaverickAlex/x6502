@@ -137,4 +137,3 @@ lcd_commands:
   byte %00000001 ;5 clear 
   byte %00000010 ;6 return home 
   byte %00000000 ;7 
-  byte %00010000 ;8 shift cursor right

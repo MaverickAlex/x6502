@@ -1,11 +1,18 @@
-LATCH_COUNT = $00
-CLOCK_CLOCK = $10
+LATCH_COUNT = $00 ;32 bit numbers 4294967295
+SHIFT_COUNT = $04
 
   .incdir "../common"
   .org $8000
   .include "startup.asm"
   jsr init_lcd
-  lda #"A"
+  jsr btd_reset
+  lda #$ff
+  sta BTD_VALUE
+  sta BTD_VALUE + 1
+  jsr btd_start
+
+
+  lda #"_"
   ldx #0
 add_A:
   sta LCD_LINE,x
@@ -33,11 +40,33 @@ irq:
   lda #(IRQ_CA1)  
   bit IRQ_FLAG    ;; compare this with irq_flag register, will be zero if from shift register
   bne ca1_irq
-  beq clock_irq
+  beq shift_irq
 ca1_irq:
+  inc LATCH_COUNT
+  bne ca1_irq_work
+  inc LATCH_COUNT + 1
+  bne ca1_irq_work
+  inc LATCH_COUNT + 2
+  bne ca1_irq_work
+  inc LATCH_COUNT + 3
+  bne ca1_irq_work
+  inc LATCH_COUNT + 4
+  bne ca1_irq_work 
+ca1_irq_work:
   lda PORTA
   jmp exit_irq
-clock_irq:
+shift_irq:
+  inc SHIFT_COUNT
+  bne shift_irq_work
+  inc SHIFT_COUNT + 1
+  bne shift_irq_work
+  inc SHIFT_COUNT  + 2
+  bne shift_irq_work
+  inc SHIFT_COUNT + 3
+  bne shift_irq_work
+  inc SHIFT_COUNT+ 4
+  bne shift_irq_work 
+shift_irq_work
   lda #%10101010
   sta SHIFTREG
   jmp exit_irq
@@ -45,6 +74,7 @@ exit_irq:
   rti
 
   .include "lcd.asm"
+  .include "32bit_binary_to_decimal.asm"
 
   .org $fffc
   .word program_start
