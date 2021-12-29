@@ -112,8 +112,6 @@ init_lcd:
   jsr lcd_instruction
   lda lcd_commands + 1 ; Display on; cursor on; blink off
   jsr lcd_instruction
-  lda lcd_commands + 4 ; Increment and shift cursor; don't shift display
-  jsr lcd_instruction
   lda lcd_commands + 5 ; Clear display
   jsr lcd_instruction
   pla
