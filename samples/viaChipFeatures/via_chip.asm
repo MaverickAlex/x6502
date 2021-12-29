@@ -1,8 +1,20 @@
+LATCH_COUNT = $00
+CLOCK_CLOCK = $10
+
   .incdir "../common"
   .org $8000
   .include "startup.asm"
+  jsr init_lcd
+  lda #"A"
+  ldx #0
+add_A:
+  sta LCD_LINE,x
+  inx
+  cpx #32
+  bne add_A
+  jsr lcd_updateScreen
 
-  jsr init_lcd;
+  jmp exit
   lda #0                
   sta AUXCONTROL         ;set all aux control bits to zero
   lda #SHIFT_OUT_CB1     ;set up shift reg direction  out on cb1 ext clock pulse
@@ -24,12 +36,8 @@ irq:
   beq clock_irq
 ca1_irq:
   lda PORTA
-  lda #"L"
-  jsr print_char
   jmp exit_irq
 clock_irq:
-  lda #"C"
-  jsr print_char
   lda #%10101010
   sta SHIFTREG
   jmp exit_irq
