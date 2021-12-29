@@ -6,28 +6,17 @@ SHIFT_COUNT = $04
   .include "startup.asm"
   jsr init_lcd
   jsr btd_reset
-  lda #$ff
-  sta BTD_VALUE
-  sta BTD_VALUE + 1
-  sta BTD_VALUE + 2
-  sta BTD_VALUE + 3
-  jsr btd_start
-  ldx #0
-getNumber:
-  jsr bts_getNextChar
-  cmp #0
-  beq finishNumber
-  sta LCD_LINE ,x
-  inx
-  cmp #0
-  bne getNumber
-finishNumber:
 
 
-  jsr lcd_updateScreen
-
-  jmp exit
-  lda #0                
+  lda #0
+  sta LATCH_COUNT
+  sta LATCH_COUNT + 1
+  sta LATCH_COUNT + 2
+  sta LATCH_COUNT + 3
+  sta SHIFT_COUNT 
+  sta SHIFT_COUNT + 1
+  sta SHIFT_COUNT + 2
+  sta SHIFT_COUNT + 3                
   sta AUXCONTROL         ;set all aux control bits to zero
   lda #SHIFT_OUT_CB1     ;set up shift reg direction  out on cb1 ext clock pulse
   sta AUXCONTROL        ;store to via chip autcontrol register
@@ -39,6 +28,46 @@ finishNumber:
   cli
 
 exit:
+  lda LATCH_COUNT
+  sta BTD_VALUE
+  lda LATCH_COUNT + 1
+  sta BTD_VALUE + 1
+  lda LATCH_COUNT + 2
+  sta BTD_VALUE + 2
+  lda LATCH_COUNT + 3
+  sta BTD_VALUE + 3
+  jsr btd_start
+  ldx #0
+getLatchNumber:
+  jsr bts_getNextChar
+  cmp #0
+  beq finishLatchNumber
+  sta LCD_LINE ,x
+  inx
+  cmp #0
+  bne getLatchNumber
+finishLatchNumber:
+
+  lda SHIFT_COUNT
+  sta BTD_VALUE
+  lda SHIFT_COUNT + 1
+  sta BTD_VALUE + 1
+  lda SHIFT_COUNT + 2
+  sta BTD_VALUE + 2
+  lda SHIFT_COUNT + 3
+  sta BTD_VALUE + 3
+  jsr btd_start
+  ldx #16
+getShiftNumber:
+  jsr bts_getNextChar
+  cmp #0
+  beq finishShiftNumber
+  sta LCD_LINE ,x
+  inx
+  cmp #0
+  bne getShiftNumber
+finishShiftNumber:
+  jsr lcd_updateScreen
   jmp exit
 
 irq:
