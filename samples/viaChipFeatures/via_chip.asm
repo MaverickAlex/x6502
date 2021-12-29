@@ -14,19 +14,14 @@
   sta SHIFTREG
   cli
 
-
-  
-
-
-
 exit:
   jmp exit
 
 irq:
-  lda IRQ_CA1
-  bit IRQ_FLAG
-  bne clock_irq
-  beq ca1_irq
+  lda #(IRQ_CA1)  
+  bit IRQ_FLAG    ;; compare this with irq_flag register, will be zero if from shift register
+  bne ca1_irq
+  beq clock_irq
 ca1_irq:
   lda PORTA
   lda #"L"
