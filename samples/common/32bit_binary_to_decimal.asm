@@ -32,7 +32,10 @@ btd_reset:
   rts  
 
 btd_start:
+  pha
+  lda #0
   ldy #0
+  sta BTD_INDEX
 btd_divide:
   ; Initialize the remainder to zero
   lda #0
@@ -86,6 +89,7 @@ btd_ignore_result:
   ;; need to swap number order
   dec BTD_INDEX
 bts_done:
+  pla
   rts
 
 bts_getNextChar:
@@ -97,7 +101,7 @@ bts_getNextChar:
   dec BTD_INDEX
   jmp bts_getNextChar_exit
 bts_getNextChar_Empty:
-  lda #0
+  lda #$ff
 bts_getNextChar_exit:
   plx
   rts

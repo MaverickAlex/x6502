@@ -13,7 +13,7 @@ typedef struct {
   // Current contents of Data Direction Register A
   uint8_t ddra;
   //current contents of Shift Register
-  uint8_t sr
+  uint8_t sr;
   //current contents of Auxiliary Control Register
   uint8_t acr;
   //current contents of Peripheral Control Register

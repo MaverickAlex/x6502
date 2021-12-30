@@ -1,5 +1,7 @@
-LATCH_COUNT = $00 ;32 bit numbers 4294967295
-SHIFT_COUNT = $04
+LATCH_COUNT = $00 ;4 bytes
+SHIFT_COUNT = $04 ;4 bytes
+TICKS       = $08 ;4 bytes
+TOGGLE_TIME = $12 ;1 byte
 
   .incdir "../common"
   .org $8000
@@ -7,8 +9,13 @@ SHIFT_COUNT = $04
   jsr init_lcd
   jsr btd_reset
 
-
+;reset memory locations to zero
   lda #0
+  sta TICKS
+  sta TICKS + 1
+  sta TICKS + 2
+  sta TICKS + 3
+  sta TOGGLE_TIME
   sta LATCH_COUNT
   sta LATCH_COUNT + 1
   sta LATCH_COUNT + 2
@@ -16,18 +23,38 @@ SHIFT_COUNT = $04
   sta SHIFT_COUNT 
   sta SHIFT_COUNT + 1
   sta SHIFT_COUNT + 2
-  sta SHIFT_COUNT + 3                
-  sta AUXCONTROL         ;set all aux control bits to zero
-  lda #SHIFT_OUT_CB1     ;set up shift reg direction  out on cb1 ext clock pulse
-  sta AUXCONTROL        ;store to via chip autcontrol register
+  sta SHIFT_COUNT + 3  
+  sta AUXCONTROL            
+  lda #TIMER1_CONTINUOUS     
+  sta AUXCONTROL              
   
-  lda #(IRQ_SET | IRQ_SHIFT | IRQ_CA1)  ; enable the shift IRQ and ca1 pin interrupt
+  lda #(IRQ_SET | IRQ_TIMER1);  | IRQ_SHIFT | IRQ_CA1)  ; enable the shift IRQ and ca1 pin interrupt
   sta IRQ_ENABLE_REG
-  lda #%10101010
-  sta SHIFTREG
   cli
+  lda #$0e
+  sta T1CL
+  lda #$27
+  sta T1CH
+  jsr print_status
 
-exit:
+loop:
+  jsr update_status
+  jmp loop
+
+update_status:
+  sec
+  lda TICKS
+  sbc TOGGLE_TIME
+  cmp #100
+  bcc exit_update_status
+  jsr print_status
+  lda TICKS
+  sta TOGGLE_TIME
+exit_update_status:
+  rts
+
+
+print_status
   lda LATCH_COUNT
   sta BTD_VALUE
   lda LATCH_COUNT + 1
@@ -40,12 +67,11 @@ exit:
   ldx #0
 getLatchNumber:
   jsr bts_getNextChar
-  cmp #0
+  cmp #$ff
   beq finishLatchNumber
   sta LCD_LINE ,x
   inx
-  cmp #0
-  bne getLatchNumber
+  jmp getLatchNumber
 finishLatchNumber:
 
   lda SHIFT_COUNT
@@ -60,19 +86,22 @@ finishLatchNumber:
   ldx #16
 getShiftNumber:
   jsr bts_getNextChar
-  cmp #0
+  cmp #$ff
   beq finishShiftNumber
-  sta LCD_LINE ,x
+  sta LCD_LINE , x
   inx
-  cmp #0
-  bne getShiftNumber
+  jmp getShiftNumber
 finishShiftNumber:
   jsr lcd_updateScreen
-  jmp exit
+  rts
 
 irq:
+  pha
+  phy
+  phx
   lda #(IRQ_CA1)  
   bit IRQ_FLAG    ;; compare this with irq_flag register, will be zero if from shift register
+  bvs timer1_irq
   bne ca1_irq
   beq shift_irq
 ca1_irq:
@@ -85,7 +114,6 @@ ca1_irq:
   inc LATCH_COUNT + 3
   bne ca1_irq_work
   inc LATCH_COUNT + 4
-  bne ca1_irq_work 
 ca1_irq_work:
   lda PORTA
   jmp exit_irq
@@ -99,12 +127,23 @@ shift_irq:
   inc SHIFT_COUNT + 3
   bne shift_irq_work
   inc SHIFT_COUNT + 4
-  bne shift_irq_work 
 shift_irq_work
   lda #%10101010
   sta SHIFTREG
   jmp exit_irq
+timer1_irq:
+  lda T1CL
+  inc TICKS
+  bne exit_irq
+  inc TICKS + 1
+  bne exit_irq
+  inc TICKS + 2
+  bne exit_irq
+  inc TICKS + 3
 exit_irq:
+  pla
+  ply
+  plx
   rti
 
   .include "lcd.asm"
