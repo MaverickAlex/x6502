@@ -23,40 +23,61 @@
 
 .segment	"RODATA"
 
-L0004:
+L0006:
 	.byte	$53,$74,$75,$64,$79,$54,$6F,$6E,$69,$67,$68,$74,$00
 	.res	117,$00
 
 .segment	"CODE"
 
+	ldx     #$60
+	lda     #$02
+	jsr     pushax
+	ina
+	jsr     pushax
 	ldy     #$82
 	jsr     subysp
 	ldy     #$00
-L0005:	lda     L0004,y
+L0007:	lda     L0006,y
 	sta     (sp),y
 	iny
 	cpy     #$82
-	bne     L0005
+	bne     L0007
 	jsr     push0
 	lda     #$30
 	jsr     pusha
-L0008:	ldy     #$02
+	ldy     #$88
+	jsr     ldaxysp
+	sta     ptr1
+	stx     ptr1+1
+	lda     #$00
+	sta     (ptr1)
+	ldy     #$01
+	sta     (ptr1),y
+	ldy     #$86
+	jsr     ldaxysp
+	sta     ptr1
+	stx     ptr1+1
+	lda     #$00
+	sta     (ptr1)
+	ldy     #$01
+	sta     (ptr1),y
+L000E:	ldy     #$02
 	jsr     ldaxysp
 	sta     regsave
 	stx     regsave+1
 	ina
-	bne     L000E
+	bne     L0014
 	inx
-L000E:	ldy     #$01
+L0014:	ldy     #$01
 	jsr     staxysp
 	lda     regsave
 	ldx     regsave+1
 	clc
 	adc     #$03
-	bcc     L000F
+	bcc     L0015
 	inx
 	clc
-L000F:	adc     sp
+L0015:	adc     sp
 	sta     ptr1
 	txa
 	adc     sp+1
@@ -68,7 +89,7 @@ L000F:	adc     sp
 	cmp     #$82
 	txa
 	sbc     #$00
-	bcc     L0008
+	bcc     L000E
 	ldx     #$00
 	txa
 	ldy     #$01
@@ -76,7 +97,25 @@ L000F:	adc     sp
 	lda     (sp)
 	ina
 	sta     (sp)
-	bra     L0008
+	ldy     #$88
+	jsr     ldaxysp
+	jsr     pushax
+	jsr     ldaxi
+	ina
+	bne     L001F
+	inx
+L001F:	ldy     #$00
+	jsr     staxspidx
+	ldy     #$86
+	jsr     ldaxysp
+	jsr     pushax
+	jsr     ldaxi
+	ina
+	bne     L0022
+	inx
+L0022:	ldy     #$00
+	jsr     staxspidx
+	bra     L000E
 
 .endproc
 
