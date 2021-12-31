@@ -1,46 +1,51 @@
+#include <stddef.h>
 
+#include <6502.h>
+#include <peekpoke.h>
 
-int *PORTB = (int *) 0x6000; 
-int *PORTA = (int *) 0x6001; 
-int *DDRB  = (int *) 0x6002; 
-int *DDRA  = (int *) 0x6003; 
+#define PORTB     (*(unsigned char *) 0x6000)
+#define PORTA     (*(unsigned char *) 0x6001)
+#define DDRB     0x6002
+#define DDRA     (*(unsigned char *) 0x6003)
+#define LCD_RW 0x40 
+#define LCD_E 0x80
+#define LCD_RS 0x20
+#define LCD_ISBUSY (PORTB & 0x80)
 
-int E_bit =  0x80;
-int RW_bit =  0x40;
-int RS_bit =  0x20;
+const short lcdMode = 0x38; // %00111000 ;0 Set 8-bit mode; 2-line display; 5x8 font
+// short lcd_isBusy()
+// {
+//   //need to read io chip set port b to in
+//   DDRB = 0;
+//   PORTA = LCD_RW;
+//   PORTA = LCD_RW | LCD_E;
+//   short result = LCD_ISBUSY == 0;
+//   PORTA = LCD_RW;
+//   return result ;
+// }
 
-int lcd_cmd_8BIT = 0x38;  //Set 8-bit mode; 2-line display; 5x8 font
-int lcd_cmd_DisplayOn = 0x0E;  //Display on; cursor on; blink off
-int lcd_cmd_Clear = 0x01;  //clear 
-int lcd_cmd_Home =  0x02;   //return home
-int lcd_isBusy()
-{
-  *DDRB = 0x00; //set port b to input
-  *PORTA = RW_bit; 
-  *PORTA = RW_bit | E_bit; //trigger e bit to 
-  return  *PORTB && 0x80;
-}
-
-void execute_lcd_instruction(int cmd)
-{
-  while(lcd_isBusy());
-  *PORTB = cmd;
-  *PORTA = E_bit;
-  *PORTA = 0x00;
-}
-
-void init_lcd()
-{
-  *DDRB = 0xff;
-  *DDRA = 0xE0;
-  execute_lcd_instruction(lcd_cmd_8BIT);
-  execute_lcd_instruction(lcd_cmd_DisplayOn);
-  execute_lcd_instruction(lcd_cmd_Clear);
-}
-
+// void lcd_instruction(short command)
+// {
+//   while(lcd_isBusy());
+// }
+// void init_lcd()
+// {
+//   //set output ports
+//   DDRB = 0xFF;
+//   DDRA = 0xE0;
+//   //execute mode command
+//   lcd_instruction(lcdMode);
+// }
+short varA;
 int main()
 {
-  init_lcd();
+  POKE(DDRB, 0xff);
+  DDRA = 0xff;
+  PORTA = 0xaa;
+  PORTB = 0xbb;
+  varA = PEEK(0x6000);
+  PORTA = varA;
+  while(1);
   return (0);
 }
 

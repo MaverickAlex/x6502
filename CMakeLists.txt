@@ -32,3 +32,5 @@ target_compile_options(x6502 PRIVATE -O3 -lpthread -Wall -lncurses)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+install(TARGETS x6502 DESTINATION ~/bin/)

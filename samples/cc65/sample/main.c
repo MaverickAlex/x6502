@@ -1,30 +1,22 @@
+#define FIFO_DATA     (*(unsigned char *) 0x1000)
+#define FIFO_STATUS   (*(unsigned char *) 0x1001)
 
+#define TX_FIFO_FULL  (FIFO_STATUS & 0x01)
+#define RX_FIFO_EMPTY (FIFO_STATUS & 0x02)
 
+extern void wait ();
+extern void __fastcall__ rs232_tx (char *str);
 
+int main () {
+  while (1) {                                     //  Run forever
+    wait ();                                      //  Wait for an RX FIFO interrupt
 
-int main()
-{
-  int *dataDirectionB =(int*) 0x6002;
-  int *dataDirectionA =(int*) 0x6003;
-  char name[130] = "StudyTonight";  
-  int index = 0;
-  char alpha = '0';
-  *dataDirectionB = 0x00;
-  *dataDirectionA = 0x00;
-  while(1)
-  {
-    
-    
-    name[index++] = alpha;
-    if(index >= sizeof(name))
-    {
-      index = 0;
-      alpha++;
-      *dataDirectionB += 1;
-      *dataDirectionA += 1;
+    while (RX_FIFO_EMPTY == 0) {                  //  While the RX FIFO is not empty
+      if (FIFO_DATA == '?') {                     //  Does the RX character = '?'
+        rs232_tx ("Hello World!");                //  Transmit "Hello World!"
+      }                                           //  Discard any other RX characters
     }
   }
 
-
-return (0); 
+  return (0);                                     //  We should never get here!
 }
