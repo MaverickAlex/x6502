@@ -11,19 +11,171 @@
 	.importzp	tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 	.macpack	longbranch
 	.forceimport	__STARTUP__
-	.export		_lcdMode
-	.export		_varA
+	.export		_portb_buffer
+	.export		_lcd_isBusy
+	.export		_lcd_instruction
+	.export		_init_lcd
+	.export		_print
+	.export		_print_str
+	.export		_test
 	.export		_main
+
+.segment	"DATA"
+
+_portb_buffer:
+	.word	$0000
+_test:
+	.byte	$30
 
 .segment	"RODATA"
 
-_lcdMode:
-	.word	$0038
+L0076:
+	.byte	$20,$20,$20,$36,$35,$43,$30,$32,$20,$50,$6C,$61,$79,$73,$20,$20
+	.byte	$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20
+	.byte	$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$53
+	.byte	$4E,$45,$53,$00
 
-.segment	"BSS"
+; ---------------------------------------------------------------
+; signed short __near__ lcd_isBusy (void)
+; ---------------------------------------------------------------
 
-_varA:
-	.res	2,$00
+.segment	"CODE"
+
+.proc	_lcd_isBusy: near
+
+.segment	"CODE"
+
+	lda     #$00
+	sta     $6002
+	lda     #$40
+	sta     $6001
+	lda     #$C0
+	sta     $6001
+	lda     #$00
+	sta     _portb_buffer+1
+	lda     $6000
+	sta     _portb_buffer
+	lda     #$40
+	sta     $6001
+	lda     _portb_buffer
+	ldx     #$00
+	and     #$80
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ lcd_instruction (signed short)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_lcd_instruction: near
+
+.segment	"CODE"
+
+	jsr     pushax
+L001D:	jsr     _lcd_isBusy
+	stx     tmp1
+	ora     tmp1
+	bne     L001D
+	lda     #$FF
+	sta     $6002
+	ldy     #$00
+	lda     (sp),y
+	sta     $6000
+	sty     $6001
+	lda     #$80
+	sta     $6001
+	sty     $6001
+	jmp     incsp2
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ init_lcd (void)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_init_lcd: near
+
+.segment	"CODE"
+
+	lda     #$FF
+	sta     $6002
+	sta     $6003
+	ldx     #$00
+	lda     #$38
+	jsr     _lcd_instruction
+	ldx     #$00
+	lda     #$0E
+	jmp     _lcd_instruction
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ print (unsigned char)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_print: near
+
+.segment	"CODE"
+
+	jsr     pusha
+L004A:	jsr     _lcd_isBusy
+	stx     tmp1
+	ora     tmp1
+	bne     L004A
+	lda     #$FF
+	sta     $6002
+	ldy     #$00
+	lda     (sp),y
+	sta     $6000
+	lda     #$20
+	sta     $6001
+	lda     #$A0
+	sta     $6001
+	lda     #$20
+	sta     $6001
+	jmp     incsp1
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ print_str (__near__ unsigned char *)
+; ---------------------------------------------------------------
+
+.segment	"CODE"
+
+.proc	_print_str: near
+
+.segment	"CODE"
+
+	jsr     pushax
+	jsr     decsp2
+	ldy     #$03
+	jsr     ldaxysp
+L007F:	jsr     stax0sp
+	sta     ptr1
+	stx     ptr1+1
+	ldy     #$00
+	lda     (ptr1),y
+	beq     L0069
+	jsr     ldax0sp
+	sta     ptr1
+	stx     ptr1+1
+	ldy     #$00
+	lda     (ptr1),y
+	jsr     _print
+	jsr     ldax0sp
+	jsr     incax1
+	jmp     L007F
+L0069:	jmp     incsp4
+
+.endproc
 
 ; ---------------------------------------------------------------
 ; int __near__ main (void)
@@ -35,19 +187,11 @@ _varA:
 
 .segment	"CODE"
 
-	lda     #$FF
-	sta     $6002
-	sta     $6003
-	lda     #$AA
-	sta     $6001
-	lda     #$BB
-	sta     $6000
-	lda     #$00
-	sta     _varA+1
-	lda     $6000
-	sta     _varA
-	sta     $6001
-L001E:	jmp     L001E
+	jsr     _init_lcd
+	lda     #<(L0076)
+	ldx     #>(L0076)
+	jsr     _print_str
+L0080:	jmp     L0080
 
 .endproc
 
