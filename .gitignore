@@ -2,3 +2,5 @@ x6502
 .vscode
 build/*
 *.o
+*.map
+samples/cc65/snesTAS/main.map
