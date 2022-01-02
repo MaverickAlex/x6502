@@ -200,7 +200,7 @@ void update_gui(cpu *m)
               isprint(m->ac) ? m->ac : '~',
               m->ac,
               m->ac,
-              (int8_t) m->ac,
+              (int8_t)m->ac,
               m->ac & 0x80 ? '1' : '0',
               m->ac & 0x40 ? '1' : '0',
               m->ac & 0x20 ? '1' : '0',
@@ -248,9 +248,9 @@ void update_gui(cpu *m)
         }
         switch (m->opcode)
         {
-          #include "memory_highlights/store.h"
-          #include "memory_highlights/load.h"
-          #include "memory_highlights/jump.h"
+#include "memory_highlights/store.h"
+#include "memory_highlights/load.h"
+#include "memory_highlights/jump.h"
         }
 
         mvwprintw(wnd_memory_content, off16, 6 + offset * 3, "%02x ", m->mem[curAddress]);
@@ -290,6 +290,9 @@ void update_gui(cpu *m)
       switch (m->clock_mode)
       {
       case CLOCK_SPRINT:
+        read = getch();
+        keep_going = true;
+        break;
       case CLOCK_FAST:
         halfdelay(1);
         read = getch();

@@ -38,7 +38,7 @@
 #define CMD_DDRAM_SET         0x80
 
 #define CMD_BUSY              0x80
-#define BUSY_CYCLES           2
+#define BUSY_CYCLES           1
 
 #define LCD_MEM_SIZE          0x100
 

@@ -1,5 +1,14 @@
 #include "lcd.h"
-char portb_buffer = 0;
+
+unsigned char lcd_portb_buffer = 0;
+
+void lcd_clearScreen()
+{
+  lcd_instruction(LCD_CMD_CLEARSCREEN);
+  lcd_instruction(LCD_CMD_RETURNHOME);
+}
+
+
 /*
 check if lcd is busy
 */
@@ -8,9 +17,9 @@ bool lcd_isBusy()
   POKE(DDRB, BUS_INPUT); // set port b in
   POKE(PORTA, LCD_RW);
   POKE(PORTA, LCD_RW | LCD_E); 
-  portb_buffer = PEEK(PORTB);
+  lcd_portb_buffer = PEEK(PORTB);
   POKE(PORTA, LCD_RW);
-  return (bool) portb_buffer & 0x80;
+  return (bool) lcd_portb_buffer & 0x80;
 }
 
 
@@ -54,7 +63,7 @@ void print(unsigned char c)
 void print_str(unsigned char * str)
 {
   unsigned char * c;
-  for(c = str; *c != '\0'; c++ )
+  for(c = str; *c != '\0'; ++c )
   {
     print(*c);
   }

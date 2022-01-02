@@ -18,10 +18,3 @@
 
 #define BUS_INPUT  0x00
 #define BUS_OUTPUT 0xFF
-
-#define LCD_RW   0x40 
-#define LCD_E    0x80
-#define LCD_RS   0x20
-
-#define LCD_DISPLAY_ON 0x0E
-#define LCD_MODE 0x38
