@@ -1,6 +1,6 @@
-#include <stddef.h>
-#include <6502.h>
 #include <peekpoke.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #define PORTB           0x6000
 #define PORTA           0x6001
@@ -29,7 +29,7 @@
 #define LCD_DISPLAY_ON 0x0E
 #define LCD_MODE 0x38
 
-short portb_buffer = 0;
+char portb_buffer = 0;
 /*
 check if lcd is busy
 */
@@ -68,7 +68,7 @@ void init_lcd()
 
 }
 
-void print(char c)
+void print(unsigned char c)
 {
   while(lcd_isBusy());
   POKE(DDRB, BUS_OUTPUT);
@@ -78,22 +78,34 @@ void print(char c)
   POKE(PORTA, LCD_RS);
 }
 
-void print_str(char * str)
+void print_str(unsigned char * str)
 {
-  char * c;
+  unsigned char * c;
   for(c = str; *c != '\0'; c++ )
   {
     print(*c);
   }
 }
 
-
-
-char test = '0';
+unsigned int myInt = 0xffff;
+char numberString[5];
+char outputString [40];
 int main()
 {
+
+  utoa(myInt, numberString, 10);
   init_lcd();
-  print_str("   65C02 Plays                                 SNES");
+  
+
+  sprintf(outputString, "%s -> %u",numberString, myInt);
+  print_str(outputString);
+
+  
+  
+
+  
+  
+  
   while(1);
   return (0);
 }

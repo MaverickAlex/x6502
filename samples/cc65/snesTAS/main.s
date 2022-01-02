@@ -11,29 +11,37 @@
 	.importzp	tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 	.macpack	longbranch
 	.forceimport	__STARTUP__
+	.import		_utoa
+	.import		_sprintf
 	.export		_portb_buffer
 	.export		_lcd_isBusy
 	.export		_lcd_instruction
 	.export		_init_lcd
 	.export		_print
 	.export		_print_str
-	.export		_test
+	.export		_myInt
+	.export		_numberString
+	.export		_outputString
 	.export		_main
 
 .segment	"DATA"
 
 _portb_buffer:
-	.word	$0000
-_test:
-	.byte	$30
+	.byte	$00
+_myInt:
+	.word	$FFFF
 
 .segment	"RODATA"
 
-L0076:
-	.byte	$20,$20,$20,$36,$35,$43,$30,$32,$20,$50,$6C,$61,$79,$73,$20,$20
-	.byte	$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20
-	.byte	$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$20,$53
-	.byte	$4E,$45,$53,$00
+L007D:
+	.byte	$25,$73,$20,$2D,$3E,$20,$25,$75,$00
+
+.segment	"BSS"
+
+_numberString:
+	.res	5,$00
+_outputString:
+	.res	40,$00
 
 ; ---------------------------------------------------------------
 ; signed short __near__ lcd_isBusy (void)
@@ -51,8 +59,6 @@ L0076:
 	sta     $6001
 	lda     #$C0
 	sta     $6001
-	lda     #$00
-	sta     _portb_buffer+1
 	lda     $6000
 	sta     _portb_buffer
 	lda     #$40
@@ -158,7 +164,7 @@ L004A:	jsr     _lcd_isBusy
 	jsr     decsp2
 	ldy     #$03
 	jsr     ldaxysp
-L007F:	jsr     stax0sp
+L008A:	jsr     stax0sp
 	sta     ptr1
 	stx     ptr1+1
 	ldy     #$00
@@ -172,7 +178,7 @@ L007F:	jsr     stax0sp
 	jsr     _print
 	jsr     ldax0sp
 	jsr     incax1
-	jmp     L007F
+	jmp     L008A
 L0069:	jmp     incsp4
 
 .endproc
@@ -187,11 +193,34 @@ L0069:	jmp     incsp4
 
 .segment	"CODE"
 
+	lda     _myInt
+	ldx     _myInt+1
+	jsr     pushax
+	lda     #<(_numberString)
+	ldx     #>(_numberString)
+	jsr     pushax
+	ldx     #$00
+	lda     #$0A
+	jsr     _utoa
 	jsr     _init_lcd
-	lda     #<(L0076)
-	ldx     #>(L0076)
+	lda     #<(_outputString)
+	ldx     #>(_outputString)
+	jsr     pushax
+	lda     #<(L007D)
+	ldx     #>(L007D)
+	jsr     pushax
+	lda     #<(_numberString)
+	ldx     #>(_numberString)
+	jsr     pushax
+	lda     _myInt
+	ldx     _myInt+1
+	jsr     pushax
+	ldy     #$08
+	jsr     _sprintf
+	lda     #<(_outputString)
+	ldx     #>(_outputString)
 	jsr     _print_str
-L0080:	jmp     L0080
+L008B:	jmp     L008B
 
 .endproc
 
