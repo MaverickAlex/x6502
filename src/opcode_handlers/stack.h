@@ -8,6 +8,7 @@ case PHP:
 
 case PLA:
     m->ac = STACK_POP(m);
+    set_flag(m, FLAG_ZERO, m->ac == 0);
     break;
 
 case PLP:
