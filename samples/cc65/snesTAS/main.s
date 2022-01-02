@@ -24,21 +24,20 @@
 
 _myInt:
 	.word	$FFFF
+_numberString:
+	.byte	$31,$00
+	.res	8,$00
+_outputString:
+	.byte	$61,$62,$63,$00
+	.res	36,$00
 
 .segment	"RODATA"
 
-L000A:
+L0010:
 	.byte	$32,$00
-L000E	:=	L000A+0
-L0007:
-	.byte	$31,$00
 
 .segment	"BSS"
 
-_numberString:
-	.res	5,$00
-_outputString:
-	.res	40,$00
 _size:
 	.res	2,$00
 
@@ -53,17 +52,10 @@ _size:
 .segment	"CODE"
 
 	jsr     _init_lcd
-	lda     #<(L0007)
-	ldx     #>(L0007)
+	lda     #<(_numberString)
+	ldx     #>(_numberString)
 	jsr     _print_str
-	lda     #<(L000A)
-	ldx     #>(L000A)
-	jsr     _print_str
-	jsr     _lcd_clearScreen
-	lda     #<(L000E)
-	ldx     #>(L000E)
-	jsr     _print_str
-L0016:	bra     L0016
+L0018:	bra     L0018
 
 .endproc
 

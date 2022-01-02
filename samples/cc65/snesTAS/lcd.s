@@ -35,9 +35,6 @@ _lcd_portb_buffer:
 
 	ldx     #$00
 	lda     #$01
-	jsr     _lcd_instruction
-	ldx     #$00
-	lda     #$02
 	jmp     _lcd_instruction
 
 .endproc
@@ -83,11 +80,11 @@ _lcd_portb_buffer:
 	ldy     #$03
 	jsr     ldaxysp
 	jsr     stax0sp
-L006D:	jsr     ldax0sp
+L006B:	jsr     ldax0sp
 	sta     ptr1
 	stx     ptr1+1
 	lda     (ptr1)
-	beq     L006E
+	beq     L006C
 	jsr     ldax0sp
 	sta     ptr1
 	stx     ptr1+1
@@ -96,8 +93,8 @@ L006D:	jsr     ldax0sp
 	ldx     #$00
 	lda     #$01
 	jsr     addeq0sp
-	bra     L006D
-L006E:	jmp     incsp4
+	bra     L006B
+L006C:	jmp     incsp4
 
 .endproc
 
@@ -112,9 +109,9 @@ L006E:	jmp     incsp4
 .segment	"CODE"
 
 	jsr     pusha
-L004F:	jsr     _lcd_isBusy
+L004D:	jsr     _lcd_isBusy
 	tax
-	bne     L004F
+	bne     L004D
 	dea
 	sta     $6002
 	lda     (sp)
@@ -162,9 +159,9 @@ L004F:	jsr     _lcd_isBusy
 .segment	"CODE"
 
 	jsr     pushax
-L0022:	jsr     _lcd_isBusy
+L0020:	jsr     _lcd_isBusy
 	tax
-	bne     L0022
+	bne     L0020
 	dea
 	sta     $6002
 	lda     (sp)

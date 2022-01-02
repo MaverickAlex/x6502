@@ -5,7 +5,7 @@ unsigned char lcd_portb_buffer = 0;
 void lcd_clearScreen()
 {
   lcd_instruction(LCD_CMD_CLEARSCREEN);
-  lcd_instruction(LCD_CMD_RETURNHOME);
+  //lcd_instruction(LCD_CMD_RETURNHOME);
 }
 
 
@@ -63,7 +63,7 @@ void print(unsigned char c)
 void print_str(unsigned char * str)
 {
   unsigned char * c;
-  for(c = str; *c != '\0'; ++c )
+  for(c = str; *c != 0; ++c )
   {
     print(*c);
   }

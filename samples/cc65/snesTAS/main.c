@@ -9,8 +9,8 @@
 
 
 unsigned int myInt = 0xffff;
-char numberString[5];
-char outputString [40];
+unsigned char numberString[10] = "1";
+unsigned char outputString [40] = "abc";
 unsigned int size ;
 int main()
 {
@@ -20,8 +20,10 @@ int main()
   
 
   // size = sprintf(outputString, "%s -> %u",numberString, myInt);
-  print_str("1");
-  print_str("2");
+  print_str(numberString);
+
+  //print_str(numberString);
+  while(1);
   // memset(outputString,0,40);
   // sprintf(outputString, "Size:%u", size);
   // print_str(outputString);
