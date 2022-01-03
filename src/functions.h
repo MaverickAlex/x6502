@@ -67,7 +67,7 @@ static inline uint8_t write_byte(cpu *m, uint16_t address, uint8_t value)
   {
     return m->mem[address] = value;
   }
-  return m->mem[address] = value; //doing this for emulator test
+  return m->mem[address];
 }
 
 static inline uint8_t read_next_byte(cpu *m, uint8_t pc_offset)
@@ -82,9 +82,7 @@ static inline void set_pc(cpu *m, uint16_t address)
 }
 
 #define ZP(x) ((uint8_t)(x))
-//#define STACK_PUSH(m) (m)->mem[(m)->sp-- + STACK_START]
 #define STACK_PUSH(m, v) (write_byte(m, m->sp-- + STACK_START, v))
-//#define STACK_POP(m) (m)->mem[++(m)->sp + STACK_START]
 #define STACK_POP(m) (read_byte(m, ++(m)->sp + STACK_START))
 
 static inline size_t mem_abs(uint8_t low, uint8_t high, uint8_t off)
@@ -94,23 +92,19 @@ static inline size_t mem_abs(uint8_t low, uint8_t high, uint8_t off)
 
 static inline size_t mem_indirect_index(cpu *m, uint8_t addr, uint8_t off)
 {
-  //    return mem_abs(m->mem[addr], m->mem[addr+1], off);
   return mem_abs(read_byte(m, addr), read_byte(m, addr + 1), off);
 }
 
 static inline size_t mem_indexed_indirect(cpu *m, uint8_t addr, uint8_t off)
 {
-  //    return mem_abs(m->mem[addr+off], m->mem[addr+off+1], 0);
   return mem_abs(read_byte(m, addr + off), read_byte(m, addr + off + 1), 0);
 }
 
 static inline size_t mem_indirect_zp(cpu *m, uint8_t addr)
 {
-  //    return mem_abs(m->mem[addr], m->mem[addr + 1], 0);
   return mem_abs(read_byte(m, addr), read_byte(m, addr + 1), 0);
 }
 
-// set arg MUST be 16 bits, not 8, so that add results can fit into set.
 static inline void set_flag(cpu *m, uint8_t flag, uint16_t set)
 {
   if (set)
@@ -151,17 +145,6 @@ static inline uint8_t bcd(uint8_t val)
   return 10 * (val >> 4) + (0x0F & val);
 }
 
-// convert hex back to binary packed decimal
-//  static uint8_t hexTo_bdc(uint8_t val)
-//  {
-//    uint8_t y = 0;
-//    if (val / 10 < 10)
-//    {
-//      y = (val / 10) << 4;
-//    }
-//    y = (y << 4)| (val % 10);
-//    return (y);
-//  }
 
 static uint8_t convert2BCD(uint8_t hexData)
 {
