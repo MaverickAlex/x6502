@@ -67,7 +67,7 @@ static inline uint8_t write_byte(cpu *m, uint16_t address, uint8_t value)
   {
     return m->mem[address] = value;
   }
-  return m->mem[address];
+  return m->mem[address] = value; //doing this for emulator test
 }
 
 static inline uint8_t read_next_byte(cpu *m, uint8_t pc_offset)
