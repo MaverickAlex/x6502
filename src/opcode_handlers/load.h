@@ -46,6 +46,7 @@ case LDA_ZPX:
 
 case LDA_INZP:
     m->ac = read_byte(m, mem_indirect_zp(m, NEXT_BYTE(m))); //m->mem[mem_indirect_zp(m, NEXT_BYTE(m))];
+    set_flags(m, m->ac);
     break;
 
 case LDX_AB:
