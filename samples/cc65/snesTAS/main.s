@@ -11,35 +11,23 @@
 	.importzp	tmp1, tmp2, tmp3, tmp4, ptr1, ptr2, ptr3, ptr4
 	.macpack	longbranch
 	.forceimport	__STARTUP__
+	.import		_utoa
 	.import		_lcd_clearScreen
 	.import		_print_str
 	.import		_init_lcd
 	.export		_myInt
-	.export		_numberString
 	.export		_outputString
-	.export		_size
 	.export		_main
 
 .segment	"DATA"
 
 _myInt:
-	.word	$FFFF
-_numberString:
-	.byte	$31,$00
-	.res	8,$00
+	.word	$0033
 _outputString:
-	.byte	$61,$62,$63,$00
-	.res	36,$00
-
-.segment	"RODATA"
-
-L0010:
-	.byte	$32,$00
-
-.segment	"BSS"
-
-_size:
-	.res	2,$00
+	.byte	$61,$62,$63,$64,$65,$66,$67,$68,$69,$6A,$6B,$6C,$6D,$6E,$6F,$70
+	.byte	$71,$72,$73,$74,$75,$76,$77,$78,$79,$7A,$30,$31,$32,$33,$34,$35
+	.byte	$36,$37,$38,$39,$30,$41,$42,$43,$00
+	.res	19,$00
 
 ; ---------------------------------------------------------------
 ; int __near__ main (void)
@@ -51,11 +39,37 @@ _size:
 
 .segment	"CODE"
 
+	lda     _myInt
+	ldx     _myInt+1
+	jsr     pushax
+	lda     #<(_outputString)
+	ldx     #>(_outputString)
+	jsr     pushax
+	ldx     #$00
+	lda     #$0A
+	jsr     _utoa
 	jsr     _init_lcd
-	lda     #<(_numberString)
-	ldx     #>(_numberString)
+	lda     #<(_outputString)
+	ldx     #>(_outputString)
 	jsr     _print_str
-L0018:	bra     L0018
+	jsr     _lcd_clearScreen
+	ldx     #$FF
+	txa
+	sta     _myInt
+	sta     _myInt+1
+	jsr     pushax
+	lda     #<(_outputString)
+	ldx     #>(_outputString)
+	jsr     pushax
+	ldx     #$00
+	lda     #$0A
+	jsr     _utoa
+	lda     #<(_outputString)
+	ldx     #>(_outputString)
+	jsr     _print_str
+	ldx     #$00
+	txa
+	rts
 
 .endproc
 

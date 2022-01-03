@@ -22,7 +22,6 @@
 #define LCD_MODE 0x38
 
 
-
 void lcd_clearScreen(void);
 
 bool lcd_isBusy(void);

@@ -2,10 +2,23 @@
 
 unsigned char lcd_portb_buffer = 0;
 
+/*
+inialize the lcd screen.
+*/
+void lcd_init()
+{
+  POKE(DDRB, BUS_OUTPUT);
+  POKE(DDRA, BUS_OUTPUT);
+  lcd_instruction(LCD_MODE);
+  lcd_instruction(LCD_DISPLAY_ON);
+
+}
+
+
 void lcd_clearScreen()
 {
   lcd_instruction(LCD_CMD_CLEARSCREEN);
-  //lcd_instruction(LCD_CMD_RETURNHOME);
+  lcd_instruction(LCD_CMD_RETURNHOME);
 }
 
 
@@ -38,17 +51,7 @@ void lcd_instruction(short command)
   POKE(PORTA, 0x00);
   
 }
-/*
-inialize the lcd screen.
-*/
-void init_lcd()
-{
-  POKE(DDRB, BUS_OUTPUT);
-  POKE(DDRA, BUS_OUTPUT);
-  lcd_instruction(LCD_MODE);
-  lcd_instruction(LCD_DISPLAY_ON);
 
-}
 
 void print(unsigned char c)
 {
