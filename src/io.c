@@ -30,9 +30,9 @@ void handle_io(cpu *m, bool rwb)
 
       if ((addr & 0x4000) && (addr & 0x2000) && !(addr & 0x8000))
       {
-        switch (addr & 0x0f)
+        switch (addr)
         {
-        case 0x00:
+        case VIA1_PORTB:
           m->v1->portb &= (~m->v1->ddrb);
           m->v1->portb |= (m->mem[addr] & m->v1->ddrb);
           break;
@@ -78,9 +78,12 @@ void handle_io(cpu *m, bool rwb)
     }
 
     // read operation
-    m->mem[0x6000] = m->v1->portb;
-    m->mem[0x6001] = m->v1->porta;
-    m->mem[0x6002] = m->v1->ddrb;
-    m->mem[0x6003] = m->v1->ddra;
+    m->mem[VIA1_PORTB] = m->v1->portb;
+    m->mem[VIA1_PORTA] = m->v1->porta;
+    m->mem[VIA1_DDRB] = m->v1->ddrb;
+    m->mem[VIA1_DDRA] = m->v1->ddra;
+    m->mem[VIA1_TIMER1_CL] = m->v1->t1cl;
+    m->mem[VIA1_TIMER1_CH] = m->v1->t1ch;
+
   }
 }

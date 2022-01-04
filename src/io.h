@@ -17,11 +17,15 @@
 #define IO_PAINT_CYAN      0x06
 #define IO_PAINT_WHITE     0x07
 
-#define VIA1_ADDRESS       0x6000
-#define VIA1_PORTB         (VIA1_ADDRESS + 0x00)
-#define VIA1_PORTA         (VIA1_ADDRESS + 0x01)
-#define VIA1_DDRB          (VIA1_ADDRESS + 0x02)
-#define VIA1_DDRA          (VIA1_ADDRESS + 0x03)
+#define VIA1_ADDRESS        0x6000
+#define VIA1_PORTB          (VIA1_ADDRESS + 0x00)
+#define VIA1_PORTA          (VIA1_ADDRESS + 0x01)
+#define VIA1_DDRB           (VIA1_ADDRESS + 0x02)
+#define VIA1_DDRA           (VIA1_ADDRESS + 0x03)
+#define VIA1_TIMER1_CL      (VIA1_ADDRESS + 0x04)
+#define VIA1_TIMER1_CH      (VIA1_ADDRESS + 0x05)
+#define VIA1_TIMER1_LL      (VIA1_ADDRESS + 0x06)
+#define VIA1_TIMER1_LH      (VIA1_ADDRESS + 0x07)
 
 void init_io();
 void finish_io();
