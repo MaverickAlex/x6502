@@ -11,20 +11,27 @@
 #include "functions.h"
 #include "opcodes.h"
 
-void init_io() {
+void init_io()
+{
 }
 
-void finish_io() {
+void finish_io()
+{
 }
 
-void handle_io(cpu *m, bool rwb) {
-  if (!rwb) {
+void handle_io(cpu *m, bool rwb)
+{
+  if (!rwb)
+  {
     // data potentially written to memory
-    if (get_emu_flag(m, EMU_FLAG_DIRTY)) {
+    if (get_emu_flag(m, EMU_FLAG_DIRTY))
+    {
       uint16_t addr = m->dirty_mem_addr;
 
-      if ((addr & 0x4000) && (addr & 0x2000) && !(addr & 0x8000)) {
-        switch (addr & 0x0f) {
+      if ((addr & 0x4000) && (addr & 0x2000) && !(addr & 0x8000))
+      {
+        switch (addr & 0x0f)
+        {
         case 0x00:
           m->v1->portb &= (~m->v1->ddrb);
           m->v1->portb |= (m->mem[addr] & m->v1->ddrb);
@@ -41,14 +48,19 @@ void handle_io(cpu *m, bool rwb) {
           break;
         }
 
-        if (m->lcd_8_bit) {
+        if (m->lcd_8_bit)
+        {
           process_input(m->l, m->v1->porta & 0x80, m->v1->porta & 0x40, m->v1->porta & 0x20, m->v1->portb);
-        } else {
+        }
+        else
+        {
           process_input(m->l, m->v1->portb & 0x08, m->v1->portb & 0x04, m->v1->portb & 0x02, m->v1->portb & 0xf0);
         }
       }
     }
-  } else {
+  }
+  else
+  {
     uint8_t old_porta_input = m->v1->porta & ~m->v1->ddra;
 
     m->v1->portb &= m->v1->ddrb;
@@ -60,7 +72,8 @@ void handle_io(cpu *m, bool rwb) {
     m->v1->porta |= m->k->key_left ? 0x08 : 0;
     m->v1->porta |= m->k->key_right ? 0x10 : 0;
 
-    if (old_porta_input != (m->v1->porta & ~m->v1->ddra)) {
+    if (old_porta_input != (m->v1->porta & ~m->v1->ddra))
+    {
       m->interrupt_waiting = 0x01;
     }
 
