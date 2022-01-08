@@ -280,12 +280,7 @@ void update_gui(cpu *m)
     else
     {
       input_cycle_skip = 0;
-
-      m->k->key_up = false;
-      m->k->key_down = false;
-      m->k->key_left = false;
-      m->k->key_right = false;
-      m->k->key_enter = false;
+      reset_keys(m->k);
 
       switch (m->clock_mode)
       {
@@ -334,24 +329,30 @@ void update_gui(cpu *m)
           m->clock_mode = CLOCK_FAST;
         }
         break;
-      case 10:
-        m->k->key_enter = true;
+
+      case 'r':
+      case 'R':
+        m->k->sw1_reset = true;
         keep_going = true;
         break;
-      case KEY_UP:
-        m->k->key_up = true;
+      case '1':
+        m->k->sw2_key = false;
         keep_going = true;
         break;
-      case KEY_DOWN:
-        m->k->key_down = true;
+      case '2':
+        m->k->sw3_key = false;
         keep_going = true;
         break;
-      case KEY_LEFT:
-        m->k->key_left = true;
+      case '3':
+        m->k->sw4_key = false;
         keep_going = true;
         break;
-      case KEY_RIGHT:
-        m->k->key_right = true;
+      case '4':
+        m->k->sw5_key = false;
+        keep_going = true;
+        break;
+      case '5':
+        m->k->sw6_key = false;
         keep_going = true;
         break;
       case '[':

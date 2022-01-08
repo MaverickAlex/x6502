@@ -4,17 +4,22 @@
 
 keys * new_keys() {
   keys *k = malloc(sizeof(keys));
-
-  k->key_up = false;
-  k->key_down = false;
-  k->key_left = false;
-  k->key_right = false;
-  k->key_enter = false;
-
+  reset_keys(k);
   return k;
 }
 
-void destroy_keys(keys* k) {
+void destroy_keys(keys* k) 
+{
   free(k);
+}
+
+void reset_keys(keys* k)
+{
+  k->sw1_reset = false;
+  k->sw2_key = true;
+  k->sw3_key = true;
+  k->sw4_key = true;
+  k->sw5_key = true;
+  k->sw6_key = true;  
 }
 

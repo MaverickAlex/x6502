@@ -8,6 +8,7 @@ via *new_via()
 
   v->portb = 0x00;
   v->porta = 0x00;
+  
   v->ddrb = 0x00;
   v->ddrb = 0x00;
 
