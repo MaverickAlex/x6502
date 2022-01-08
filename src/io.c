@@ -36,15 +36,21 @@ void handle_io(cpu *m, bool rwb)
           m->v1->portb &= (~m->v1->ddrb);
           m->v1->portb |= (m->mem[addr] & m->v1->ddrb);
           break;
-        case 0x01:
+        case VIA1_PORTA:
           m->v1->porta &= (~m->v1->ddra);
           m->v1->porta |= (m->mem[addr] & m->v1->ddra);
           break;
-        case 0x02:
+        case VIA1_DDRB:
           m->v1->ddrb = m->mem[addr];
           break;
-        case 0x03:
+        case VIA1_DDRA:
           m->v1->ddra = m->mem[addr];
+          break;
+        case VIA1_TIMER1_CH:
+        case VIA1_TIMER1_CL:
+        case VIA1_TIMER1_LH:
+        case VIA1_TIMER1_LL:
+          //TODO add these plus the other registers on the via chipset
           break;
         }
 
@@ -84,6 +90,5 @@ void handle_io(cpu *m, bool rwb)
     m->mem[VIA1_DDRA] = m->v1->ddra;
     m->mem[VIA1_TIMER1_CL] = m->v1->t1cl;
     m->mem[VIA1_TIMER1_CH] = m->v1->t1ch;
-
   }
 }
