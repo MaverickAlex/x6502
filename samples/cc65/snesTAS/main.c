@@ -12,8 +12,8 @@ unsigned int myInt = 0x33;
 unsigned char outputString[60] = "abcdefghijklmnopqrstuvwxyz01234567890ABC";
 int main()
 {
-  utoa(myInt, outputString, 10);
   lcd_init();
+  utoa(myInt, outputString, 10);
   print_str(outputString);
   lcd_clearScreen();
   myInt = 0xFFFF;
